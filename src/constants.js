@@ -31,3 +31,15 @@ exports.PictureRestrict = {
 exports.MOCKS_FILE_NAME = `mocks.json`;
 
 exports.DEFAULT_AD_AMOUNT = 1;
+
+exports.HELP_MESSAGE = `
+Программа запускает http-сервер и формирует файл с данными для API.
+
+  Гайд:
+  service.js <command>
+
+  Команды:
+  --version:            выводит номер версии
+  --help:               печатает этот текст
+  --generate <count>    формирует файл mocks.json
+`;
