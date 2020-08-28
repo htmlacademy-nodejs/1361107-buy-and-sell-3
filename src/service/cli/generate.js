@@ -1,6 +1,7 @@
 "use strict";
 
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
+const chalk = require(`chalk`);
 const {
   MAX_ADS_NUMBER,
   ExitCode,
@@ -49,11 +50,11 @@ const generateAd = (amount) => {
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  run: async (args) => {
     let count = Number.parseInt(args[0], 10);
 
     if (count > MAX_ADS_NUMBER) {
-      console.log(`Не больше 1000 объявлений`);
+      console.log(chalk.red(`Не больше 1000 объявлений`));
       process.exit(ExitCode.SUCCESS);
     }
 
@@ -61,13 +62,13 @@ module.exports = {
 
     const data = JSON.stringify(generateAd(count));
 
-    fs.writeFile(MOCKS_FILE_NAME, data, (err) => {
-      if (err) {
-        console.log(`Неудалось записать файл`);
-        process.exit(ExitCode.ERROR);
-      }
-      console.log(`Файл успешно создан`);
+    try {
+      await fs.writeFile(MOCKS_FILE_NAME, data);
+      console.log(chalk.green(`Файл успешно создан`));
       process.exit(ExitCode.SUCCESS);
-    });
+    } catch (error) {
+      console.log(chalk.red(`Неудалось записать файл`));
+      process.exit(ExitCode.ERROR);
+    }
   },
 };
