@@ -9,6 +9,12 @@ exports.ExitCode = {
   SUCCESS: 0,
 };
 
+exports.DataFileName = {
+  titles: `data/titles.txt`,
+  categories: `data/categories.txt`,
+  sentences: `data/sentences.txt`,
+};
+
 exports.MAX_ADS_NUMBER = 1000;
 
 exports.AdType = {
