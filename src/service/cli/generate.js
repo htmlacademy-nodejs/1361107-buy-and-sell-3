@@ -13,20 +13,7 @@ const {
   DEFAULT_AD_AMOUNT,
   DataFileName,
 } = require(`../../constants`);
-const {getRandomInt, shuffle} = require(`../../utils`);
-
-const readContent = async (fileName) => {
-  try {
-    const list = await fs.readFile(`${fileName}`, `utf8`);
-    const content = list
-      .split(`\n`)
-      .map((string) => string.replace(/(\r\n|\n|\r)/gm, ``));
-    return content;
-  } catch (error) {
-    console.log(chalk.red(`Не удалось прочитать файл с данными`));
-    return [];
-  }
-};
+const {getRandomInt, shuffle, readContent} = require(`../../utils`);
 
 const getPictureFileName = () => {
   let number = getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX);
