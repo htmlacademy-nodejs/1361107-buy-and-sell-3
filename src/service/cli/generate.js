@@ -54,7 +54,7 @@ module.exports = {
     let count = Number.parseInt(args[0], 10);
 
     if (count > MAX_ADS_NUMBER) {
-      console.log(`Не больше 1000 объявлений`);
+      console.log(chalk.red(`Не больше 1000 объявлений`));
       process.exit(ExitCode.SUCCESS);
     }
 
