@@ -11,11 +11,9 @@ const {
   PictureRestrict,
   MOCKS_FILE_NAME,
   DEFAULT_AD_AMOUNT,
+  DataFileName,
 } = require(`../../constants`);
-const titles = require(`../../../data/titles.json`);
-const categories = require(`../../../data/categories.json`);
-const descriptions = require(`../../../data/descriptions.json`);
-const {getRandomInt, shuffle} = require(`../../utils`);
+const {getRandomInt, shuffle, readContent} = require(`../../utils`);
 
 const getPictureFileName = () => {
   let number = getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX);
@@ -25,7 +23,7 @@ const getPictureFileName = () => {
   return `item${number}.jpg`;
 };
 
-const generateAd = (amount) => {
+const generateAd = (amount, data) => {
   return Array(amount)
     .fill(0, 0, amount)
     .map(() => {
@@ -34,15 +32,15 @@ const generateAd = (amount) => {
           AdType[
             Object.keys(AdType)[getRandomInt(0, Object.keys(AdType).length - 1)]
           ],
-        title: titles[getRandomInt(0, titles.length - 1)],
-        description: shuffle(descriptions)
+        title: data.titles[getRandomInt(0, data.titles.length - 1)],
+        description: shuffle(data.sentences)
           .slice(0, getRandomInt(1, MAX_DESCR_SIZE))
           .join(` `),
         sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
         picture: getPictureFileName(),
-        category: shuffle(categories).slice(
+        category: shuffle(data.categories).slice(
             0,
-            getRandomInt(1, categories.length)
+            getRandomInt(1, data.categories.length)
         ),
       };
     });
@@ -53,6 +51,10 @@ module.exports = {
   run: async (args) => {
     let count = Number.parseInt(args[0], 10);
 
+    const [titles, categories, sentences] = await Promise.all(
+        Object.values(DataFileName).map((fileName) => readContent(fileName))
+    );
+
     if (count > MAX_ADS_NUMBER) {
       console.log(chalk.red(`Не больше 1000 объявлений`));
       process.exit(ExitCode.SUCCESS);
@@ -60,7 +62,9 @@ module.exports = {
 
     count = !count || count <= 0 ? DEFAULT_AD_AMOUNT : count;
 
-    const data = JSON.stringify(generateAd(count));
+    const data = JSON.stringify(
+        generateAd(count, {titles, categories, sentences})
+    );
 
     try {
       await fs.writeFile(MOCKS_FILE_NAME, data);
