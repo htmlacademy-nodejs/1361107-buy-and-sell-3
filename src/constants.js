@@ -26,6 +26,7 @@ exports.ROUTE = {
 };
 
 exports.NOT_FOUND_MESSAGE = `Ничего не найдено`;
+exports.SERVER_ERROR_MESSAGE = `Ошибка на стороне сервера`;
 
 exports.HttpCode = {
   OK: 200,

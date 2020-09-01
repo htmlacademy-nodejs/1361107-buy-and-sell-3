@@ -7,7 +7,7 @@ const loginRouter = require(`./routes/login-routes`);
 const myRouter = require(`./routes/my-routes`);
 const offersRouter = require(`./routes/offers-routes`);
 const searchRouter = require(`./routes/search-routes`);
-const {DEFAULT_RENDER_PORT} = require(`../constants`);
+const {DEFAULT_RENDER_PORT, NOT_FOUND_MESSAGE, SERVER_ERROR_MESSAGE} = require(`../constants`);
 
 const app = express();
 
@@ -18,8 +18,8 @@ app.use(`/my`, myRouter);
 app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
 
-app.use((req, res) => res.send(`Not Found`));
+app.use((req, res) => res.send(NOT_FOUND_MESSAGE));
 
-app.use((err, req, res) => res.send(`Server Error`));
+app.use((err, req, res) => res.send(SERVER_ERROR_MESSAGE));
 
 app.listen(DEFAULT_RENDER_PORT);
