@@ -17,6 +17,22 @@ exports.DataFileName = {
 
 exports.MAX_ADS_NUMBER = 1000;
 
+exports.DEFAULT_PORT = 3000;
+
+exports.ROUTE = {
+  ROOT: `/`
+};
+
+exports.NOT_FOUND_MESSAGE = `Ничего не найдено`;
+
+exports.HttpCode = {
+  OK: 200,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+  FORBIDDEN: 403,
+  UNAUTHORIZED: 401,
+};
+
 exports.AdType = {
   OFFER: `offer`,
   SALE: `sale`,
@@ -48,4 +64,5 @@ exports.HELP_MESSAGE = `
   --version:            выводит номер версии
   --help:               печатает этот текст
   --generate <count>    формирует файл mocks.json
+  --server <port>       запускает веб-сервер на указаном порте
 `;
