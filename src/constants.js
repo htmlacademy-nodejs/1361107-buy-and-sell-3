@@ -17,7 +17,9 @@ exports.DataFileName = {
 
 exports.MAX_ADS_NUMBER = 1000;
 
-exports.DEFAULT_PORT = 3000;
+exports.DEFAULT_API_PORT = 3000;
+
+exports.DEFAULT_RENDER_PORT = 8080;
 
 exports.ROUTE = {
   ROOT: `/`
