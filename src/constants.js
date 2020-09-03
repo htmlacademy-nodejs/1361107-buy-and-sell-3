@@ -17,13 +17,12 @@ exports.DataFileName = {
 
 exports.MAX_ADS_NUMBER = 1000;
 
-exports.DEFAULT_PORT = 3000;
+exports.DEFAULT_API_PORT = 3000;
 
-exports.ROUTE = {
-  ROOT: `/`
-};
+exports.DEFAULT_RENDER_PORT = 8080;
 
 exports.NOT_FOUND_MESSAGE = `Ничего не найдено`;
+exports.SERVER_ERROR_MESSAGE = `Ошибка на стороне сервера`;
 
 exports.HttpCode = {
   OK: 200,
