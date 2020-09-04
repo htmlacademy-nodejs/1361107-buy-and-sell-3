@@ -65,3 +65,7 @@ exports.HELP_MESSAGE = `
   --generate <count>    формирует файл mocks.json
   --server <port>       запускает веб-сервер на указаном порте
 `;
+
+exports.PUBLIC_DIR = `public`;
+
+exports.TEMPLATES_DIR = `templates`;
