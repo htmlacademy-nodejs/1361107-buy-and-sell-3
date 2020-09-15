@@ -2,7 +2,7 @@
 
 const fs = require(`fs`).promises;
 const {Router} = require(`express`);
-const {MOCKS_FILE_NAME} = require(`../../../../constants`);
+const {MOCKS_FILE_NAME, HttpCode, SERVER_ERROR_MESSAGE} = require(`../../../../constants`);
 
 const offersRouter = new Router();
 
@@ -12,7 +12,7 @@ offersRouter.get(`/`, async (req, res) => {
     const ads = JSON.parse(mocks);
     res.json(ads);
   } catch (error) {
-    res.json([]);
+    res.status(HttpCode.INTERNAL_SERVER_ERROR).send(SERVER_ERROR_MESSAGE);
   }
 });
 
