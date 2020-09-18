@@ -2,6 +2,7 @@
 
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
+const {nanoid} = require(`nanoid`);
 const {
   MAX_ADS_NUMBER,
   ExitCode,
@@ -12,6 +13,8 @@ const {
   MOCKS_FILE_NAME,
   DEFAULT_AD_AMOUNT,
   DataFileName,
+  MAX_ID_LENGTH,
+  CommentRestrict,
 } = require(`../../constants`);
 const {getRandomInt, shuffle, readContent} = require(`../../utils`);
 
@@ -23,11 +26,25 @@ const getPictureFileName = () => {
   return `item${number}.jpg`;
 };
 
+const generateCommentList = (commentsAmount, comments) => {
+  return Array(commentsAmount)
+    .fill({}, 0, commentsAmount)
+    .map(() => {
+      return {
+        id: nanoid(MAX_ID_LENGTH),
+        text: shuffle(comments)
+          .slice(0, getRandomInt(1, CommentRestrict.MAX_SENTENCES_AMOUNT))
+          .join(` `),
+      };
+    });
+};
+
 const generateAd = (amount, data) => {
   return Array(amount)
     .fill(0, 0, amount)
     .map(() => {
       return {
+        id: nanoid(MAX_ID_LENGTH),
         type:
           AdType[
             Object.keys(AdType)[getRandomInt(0, Object.keys(AdType).length - 1)]
@@ -42,6 +59,10 @@ const generateAd = (amount, data) => {
             0,
             getRandomInt(1, data.categories.length)
         ),
+        comments: generateCommentList(
+            getRandomInt(1, CommentRestrict.MAX_COMMENTS_AMOUNT),
+            data.comments
+        ),
       };
     });
 };
@@ -51,7 +72,7 @@ module.exports = {
   run: async (args) => {
     let count = Number.parseInt(args[0], 10);
 
-    const [titles, categories, sentences] = await Promise.all(
+    const [titles, categories, sentences, comments] = await Promise.all(
         Object.values(DataFileName).map((fileName) => readContent(fileName))
     );
 
@@ -63,7 +84,7 @@ module.exports = {
     count = !count || count <= 0 ? DEFAULT_AD_AMOUNT : count;
 
     const data = JSON.stringify(
-        generateAd(count, {titles, categories, sentences})
+        generateAd(count, {titles, categories, sentences, comments})
     );
 
     try {

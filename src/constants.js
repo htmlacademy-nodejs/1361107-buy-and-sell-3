@@ -13,6 +13,7 @@ exports.DataFileName = {
   titles: `data/titles.txt`,
   categories: `data/categories.txt`,
   sentences: `data/sentences.txt`,
+  comments: `data/comments.txt`
 };
 
 exports.MAX_ADS_NUMBER = 1000;
@@ -52,6 +53,13 @@ exports.PictureRestrict = {
 exports.MOCKS_FILE_NAME = `mocks.json`;
 
 exports.DEFAULT_AD_AMOUNT = 1;
+
+exports.MAX_ID_LENGTH = 6;
+
+exports.CommentRestrict = {
+  MAX_SENTENCES_AMOUNT: 3,
+  MAX_COMMENTS_AMOUNT: 5,
+};
 
 exports.HELP_MESSAGE = `
 Программа запускает http-сервер и формирует файл с данными для API.
