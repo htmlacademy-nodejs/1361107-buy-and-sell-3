@@ -11,14 +11,15 @@ const searchRouter = require(`./routes/search-routes`);
 const {
   DEFAULT_RENDER_PORT,
   HttpCode,
-  PUBLIC_DIR,
-  TEMPLATES_DIR,
+  DirPath,
+  ExitCode
 } = require(`../constants`);
+const chalk = require(`chalk`);
 
 const app = express();
 
-app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
-app.set(`views`, path.resolve(__dirname, TEMPLATES_DIR));
+app.use(express.static(path.resolve(__dirname, DirPath.PUBLIC)));
+app.set(`views`, path.resolve(__dirname, DirPath.TEMPLATES));
 app.set(`view engine`, `pug`);
 
 app.use(`/`, mainRouter);
@@ -29,6 +30,16 @@ app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
 
 app.use((req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/400`));
-app.use((err, req, res) => res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`));
+app.use((err, req, res) => {
+  console.trace(err);
+  return res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
+});
 
-app.listen(DEFAULT_RENDER_PORT);
+app.listen(DEFAULT_RENDER_PORT, (err) => {
+  if (err) {
+    console.log(chalk.red(`Неудалось запустить сервер`));
+    process.exit(ExitCode.ERROR);
+  }
+
+  console.log(chalk.gray(`Сервер запущен, порт: ${DEFAULT_RENDER_PORT}`));
+});

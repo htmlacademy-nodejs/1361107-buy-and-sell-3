@@ -4,14 +4,14 @@ const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const {nanoid} = require(`nanoid`);
 const {
-  MAX_ADS_NUMBER,
+  MAX_OFFERS_NUMBER,
   ExitCode,
-  AdType,
+  OfferType,
   MAX_DESCR_SIZE,
   SumRestrict,
   PictureRestrict,
   MOCKS_FILE_NAME,
-  DEFAULT_AD_AMOUNT,
+  DEFAULT_OFFER_AMOUNT,
   DataFileName,
   MAX_ID_LENGTH,
   CommentRestrict,
@@ -39,15 +39,15 @@ const generateCommentList = (commentsAmount, comments) => {
     });
 };
 
-const generateAd = (amount, data) => {
+const generateOffer = (amount, data) => {
   return Array(amount)
     .fill(0, 0, amount)
     .map(() => {
       return {
         id: nanoid(MAX_ID_LENGTH),
         type:
-          AdType[
-            Object.keys(AdType)[getRandomInt(0, Object.keys(AdType).length - 1)]
+          OfferType[
+            Object.keys(OfferType)[getRandomInt(0, Object.keys(OfferType).length - 1)]
           ],
         title: data.titles[getRandomInt(0, data.titles.length - 1)],
         description: shuffle(data.sentences)
@@ -76,15 +76,15 @@ module.exports = {
         Object.values(DataFileName).map((fileName) => readContent(fileName))
     );
 
-    if (count > MAX_ADS_NUMBER) {
+    if (count > MAX_OFFERS_NUMBER) {
       console.log(chalk.red(`Не больше 1000 объявлений`));
       process.exit(ExitCode.SUCCESS);
     }
 
-    count = !count || count <= 0 ? DEFAULT_AD_AMOUNT : count;
+    count = !count || count <= 0 ? DEFAULT_OFFER_AMOUNT : count;
 
     const data = JSON.stringify(
-        generateAd(count, {titles, categories, sentences, comments})
+        generateOffer(count, {titles, categories, sentences, comments})
     );
 
     try {

@@ -16,7 +16,7 @@ exports.DataFileName = {
   comments: `data/comments.txt`
 };
 
-exports.MAX_ADS_NUMBER = 1000;
+exports.MAX_OFFERS_NUMBER = 1000;
 
 exports.DEFAULT_API_PORT = 3000;
 
@@ -27,13 +27,15 @@ exports.SERVER_ERROR_MESSAGE = `Ошибка на стороне сервера`
 
 exports.HttpCode = {
   OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
-  FORBIDDEN: 403,
-  UNAUTHORIZED: 401,
 };
 
-exports.AdType = {
+exports.OfferType = {
   OFFER: `offer`,
   SALE: `sale`,
 };
@@ -52,7 +54,16 @@ exports.PictureRestrict = {
 
 exports.MOCKS_FILE_NAME = `mocks.json`;
 
-exports.DEFAULT_AD_AMOUNT = 1;
+exports.DEFAULT_OFFER_AMOUNT = 1;
+
+exports.ResponceMessage = {
+  DATA_NOT_FOUND: `Данные не найдены`,
+  API_ROUTE_NOT_FOUND: `Маршрут не найден`,
+  PAGE_NOT_FOUND: `Страница не найдена`,
+  BAD_REQUEST: `Получены неверные данные`,
+};
+
+exports.API_PREFIX = `/api`;
 
 exports.MAX_ID_LENGTH = 6;
 
@@ -74,6 +85,7 @@ exports.HELP_MESSAGE = `
   --server <port>       запускает веб-сервер на указаном порте
 `;
 
-exports.PUBLIC_DIR = `public`;
-
-exports.TEMPLATES_DIR = `templates`;
+exports.DirPath = {
+  PUBLIC: `public`,
+  TEMPLATES: `templates`,
+};
