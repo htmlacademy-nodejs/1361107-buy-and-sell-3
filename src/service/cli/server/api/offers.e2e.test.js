@@ -266,17 +266,17 @@ describe(`API deletes an offer`, () => {
   });
 });
 
-// describe(`API does nothing when trying to delete non-existent offer`, () => {
-//   const app = createAPI();
+describe(`API does nothing when trying to delete non-existent offer`, () => {
+  const app = createAPI();
 
-//   let response;
+  let response;
 
-//   beforeAll(async () => {
-//     response = await request(app).delete(`/offers/non-existent-id`);
-//   });
+  beforeAll(async () => {
+    response = await request(app).delete(`/offers/non-existent-id`);
+  });
 
-//   test(`Status code 404`, () => expect(response.statusCode).toBe(HttpCode.NOT_FOUND));
-// });
+  test(`Status code 404`, () => expect(response.statusCode).toBe(HttpCode.NOT_FOUND));
+});
 
 describe(`API returns comments list`, () => {
   const app = createAPI();
