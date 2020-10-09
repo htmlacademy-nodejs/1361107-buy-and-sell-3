@@ -7,8 +7,9 @@
     "test": "npm run eslint && npm run jest",
     "jest": "jest",
     "eslint": "eslint --ext .js src/",
-    "start": "node ./src/service/service.js",
-    "server": "nodemon ./src/service/service.js --server",
+    "start": "cross-env LOG_LEVEL=production node ./src/service/service.js",
+    "start::debug": "cross-env NODE_ENV=development node ./src/service/service.js",
+    "server": "cross-env NODE_ENV=development nodemon ./src/service/service.js --server",
     "start-front-server": "nodemon ./src/express/index.js"
   },
   "repository": {
@@ -26,13 +27,16 @@
     "eslint-config-htmlacademy": "0.5.2",
     "jest": "26.5.2",
     "nodemon": "2.0.4",
+    "pino-pretty": "4.3.0",
     "supertest": "5.0.0"
   },
   "dependencies": {
     "@types/express": "^4.17.8",
     "chalk": "4.1.0",
+    "cross-env": "7.0.2",
     "express": "4.17.1",
     "nanoid": "3.1.12",
+    "pino": "6.7.0",
     "pug": "3.0.0"
   }
 }
