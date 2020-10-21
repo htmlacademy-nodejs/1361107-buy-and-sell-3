@@ -4,8 +4,8 @@
   "description": "Куплю. Продам",
   "main": "./src/service/service.js",
   "scripts": {
-    "test": "npm run eslint && npm run jest",
-    "jest": "jest",
+    "test": "npm run eslint && npm run test::rest",
+    "test::rest": "npm run jest --testPathPattern=src/service",
     "eslint": "eslint --ext .js src/",
     "start": "cross-env LOG_LEVEL=production node ./src/service/service.js",
     "start::debug": "cross-env NODE_ENV=development node ./src/service/service.js",
