@@ -121,38 +121,42 @@ const app = express();
 app.use(express.json());
 search(app, new DataService(mockData));
 
-describe(`API returns offer based on search query`, () => {
-  let response;
+describe(`/search route works correct:`, () => {
+  describe(`/search?query= GET request`, () => {
+    let response;
 
-  beforeAll(async () => {
-    response = await request(app).get(`/search`).query({
-      query: `Куплю детские санки`,
+    beforeAll(async () => {
+      response = await request(app).get(`/search`).query({
+        query: `Куплю детские санки`,
+      });
+    });
+
+    test(`returns 200 status code`, () => {
+      expect(response.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`founds correct amount of offers`, () => {
+      expect(response.body.length).toBe(2);
+    });
+
+    test(`founds offers with correct id`, () => {
+      expect(response.body[0].id).toBe(`y-DPDH`);
+      expect(response.body[1].id).toBe(`F4MpIg`);
     });
   });
 
-  test(`Status code 200`, () => {
-    expect(response.statusCode).toBe(HttpCode.OK);
-  });
+  describe(`/search?query= wrong GET request`, () => {
+    test(`returns code 404 if nothing was found`, async () => {
+      const response = await request(app).get(`/search`).query({
+        query: `Куплю детские лыжи`,
+      });
+      expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
 
-  test(`2 offer found`, () => {
-    expect(response.body.length).toBe(2);
-  });
-
-  test(`Offers have correct id`, () => {
-    expect(response.body[0].id).toBe(`y-DPDH`);
-    expect(response.body[1].id).toBe(`F4MpIg`);
+    test(`returns 400 when query string is absent`, async () => {
+      const response = await request(app).get(`/search`);
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
   });
 });
 
-test(`API returns code 404 if nothing is found`, async () => {
-  let response;
-  response = await request(app).get(`/search`).query({
-    query: `Куплю детские лыжи`,
-  });
-  expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
-});
-
-test(`API returns 400 when query string is absent`, async () => {
-  let response = await request(app).get(`/search`);
-  expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
-});
