@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Roh7771/1361107-buy-and-sell-3#readme",
   "devDependencies": {
+    "@types/express": "4.17.8",
     "eslint": "7.7.0",
     "eslint-config-htmlacademy": "0.5.2",
     "jest": "26.5.2",
@@ -31,7 +32,6 @@
     "supertest": "5.0.0"
   },
   "dependencies": {
-    "@types/express": "^4.17.8",
     "chalk": "4.1.0",
     "cross-env": "7.0.2",
     "express": "4.17.1",
