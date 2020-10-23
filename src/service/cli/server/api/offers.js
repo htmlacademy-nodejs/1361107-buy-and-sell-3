@@ -6,9 +6,10 @@ const offerExists = require(`../middleware/offer-exists`);
 const offerValidator = require(`../middleware/offer-validator`);
 const commentValidator = require(`../middleware/comment-validator`);
 
-const route = new Router();
 
 module.exports = (app, offersService, commentsService) => {
+  const route = new Router();
+
   route.get(`/`, (req, res) => {
     const offers = offersService.findAll();
     return res.status(HttpCode.OK).json(offers);

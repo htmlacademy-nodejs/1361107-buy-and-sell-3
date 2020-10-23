@@ -3,9 +3,10 @@
 const {Router} = require(`express`);
 const {HttpCode, ResponceMessage} = require(`../../../../constants`);
 
-const route = new Router();
 
 module.exports = (app, service) => {
+  const route = new Router();
+
   route.get(`/`, (req, res) => {
     const {query} = req.query;
 
