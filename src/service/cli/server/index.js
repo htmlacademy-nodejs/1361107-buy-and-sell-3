@@ -8,10 +8,10 @@ const {
   ResponseMessage,
   API_PREFIX,
 } = require(`../../../constants`);
-const { getLogger } = require(`../../lib/logger`);
+const {getLogger} = require(`../../lib/logger`);
 const routes = require(`./api`);
 
-const logger = getLogger({ name: `api` });
+const logger = getLogger({name: `api`});
 
 const app = express();
 

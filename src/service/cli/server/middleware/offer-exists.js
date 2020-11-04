@@ -1,9 +1,9 @@
 "use strict";
 
-const { HttpCode, ResponseMessage } = require(`../../../../constants`);
+const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 
 module.exports = (service) => (req, res, next) => {
-  const { offerId } = req.params;
+  const {offerId} = req.params;
 
   const offer = service.findOne(offerId);
 
