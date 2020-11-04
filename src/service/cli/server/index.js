@@ -5,13 +5,13 @@ const {
   ExitCode,
   DEFAULT_API_PORT,
   HttpCode,
-  ResponceMessage,
+  ResponseMessage,
   API_PREFIX,
 } = require(`../../../constants`);
-const {getLogger} = require(`../../lib/logger`);
+const { getLogger } = require(`../../lib/logger`);
 const routes = require(`./api`);
 
-const logger = getLogger({name: `api`});
+const logger = getLogger({ name: `api` });
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 app.use(API_PREFIX, routes);
 
 app.use((req, res) => {
-  res.status(HttpCode.NOT_FOUND).send(ResponceMessage.API_ROUTE_NOT_FOUND);
+  res.status(HttpCode.NOT_FOUND).send(ResponseMessage.API_ROUTE_NOT_FOUND);
   logger.error(`Route not found: ${req.url}`);
 });
 

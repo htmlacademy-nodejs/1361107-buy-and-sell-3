@@ -13,7 +13,7 @@ exports.DataFileName = {
   titles: `data/titles.txt`,
   categories: `data/categories.txt`,
   sentences: `data/sentences.txt`,
-  comments: `data/comments.txt`
+  comments: `data/comments.txt`,
 };
 
 exports.MAX_OFFERS_NUMBER = 1000;
@@ -56,7 +56,7 @@ exports.MOCKS_FILE_NAME = `mocks.json`;
 
 exports.DEFAULT_OFFER_AMOUNT = 1;
 
-exports.ResponceMessage = {
+exports.ResponseMessage = {
   DATA_NOT_FOUND: `Данные не найдены`,
   API_ROUTE_NOT_FOUND: `Маршрут не найден`,
   PAGE_NOT_FOUND: `Страница не найдена`,
@@ -92,5 +92,5 @@ exports.DirPath = {
 
 module.exports.Env = {
   DEVELOPMENT: `development`,
-  PRODUCTION: `production`
+  PRODUCTION: `production`,
 };
