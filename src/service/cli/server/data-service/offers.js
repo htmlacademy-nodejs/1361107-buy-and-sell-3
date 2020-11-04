@@ -35,7 +35,11 @@ class OffersService {
   delete(id) {
     const deletingOfferIndex = this._offers.findIndex((offer) => offer.id === id);
 
-    return this._offers.splice(deletingOfferIndex, 1);
+    if (deletingOfferIndex === -1) {
+      return;
+    }
+
+    this._offers.splice(deletingOfferIndex, 1);
   }
 }
 

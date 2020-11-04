@@ -243,8 +243,8 @@ describe(`/offers route works correctly:`, () => {
       response = await request(app).delete(`/offers/QWEfOZ`);
     });
 
-    test(`returns 200 status code`, () =>
-      expect(response.statusCode).toBe(HttpCode.OK));
+    test(`returns 204 status code`, () =>
+      expect(response.statusCode).toBe(HttpCode.NO_CONTENT));
 
     test(`deletes an offer`, async () => {
       const responceAfterChanges = await request(app).get(`/offers/QWEfOZ`);
@@ -260,8 +260,8 @@ describe(`/offers route works correctly:`, () => {
       response = await request(app).delete(`/offers/non-existent-id`);
     });
 
-    test(`returns 404 status code`, () =>
-      expect(response.statusCode).toBe(HttpCode.NOT_FOUND));
+    test(`returns 204 status code anyway`, () =>
+      expect(response.statusCode).toBe(HttpCode.NO_CONTENT));
   });
 
   describe(`/offers/:offerId/comments GET request`, () => {
@@ -355,8 +355,8 @@ describe(`/offers route works correctly:`, () => {
       response = await request(app).delete(`/offers/QWEfOZ/comments/HHVKWb`);
     });
 
-    test(`returns 200 status code`, () =>
-      expect(response.statusCode).toBe(HttpCode.OK));
+    test(`returns 204 status code`, () =>
+      expect(response.statusCode).toBe(HttpCode.NO_CONTENT));
 
     test(`deletes a comment`, async () => {
       const responseAfterDeleting = await request(app).get(
@@ -380,9 +380,9 @@ describe(`/offers route works correctly:`, () => {
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
     });
 
-    test(`returns 404 status code if a comment does not exist`, async () => {
+    test(`returns 204 status code if a comment does not exist`, async () => {
       response = await request(app).delete(`/offers/QWEfOZ/comments/non-existent-id`);
-      expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
+      expect(response.statusCode).toBe(HttpCode.NO_CONTENT);
     });
   });
 });
