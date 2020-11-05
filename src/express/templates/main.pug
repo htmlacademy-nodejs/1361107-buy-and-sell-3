@@ -9,23 +9,24 @@ block content
         .tickets-list__header
           p.tickets-list__title Самое свежее
         ul
-          each offer in listOffers
+          each itemOffer in listOffers
             li.tickets-list__item
               .ticket-card.ticket-card--color01
                 .ticket-card__img
-                  img(src=`/img/${offer.picture}`, alt='Изображение товара')
+                  img(src=`/img/${itemOffer.picture}`, alt='Изображение товара')
                 .ticket-card__info
-                  +ticketLabel(offer.type)
+                  +ticketLabel(itemOffer.type)
                   .ticket-card__categories
-                    a(href='#') #{offer.category}
+                    each category in itemOffer.category
+                      a(href='#') #{category}
                   .ticket-card__header
                     h3.ticket-card__title
-                      a(href='#') #{offer.title}
+                      a(href='#') #{itemOffer.title}
                     p.ticket-card__price
-                      span.js-sum #{offer.sum}
+                      span.js-sum #{itemOffer.sum}
                       |  ₽
                   .ticket-card__desc
-                    p #{offer.description}
+                    p #{itemOffer.description}
     section.tickets-list
       h2.visually-hidden Самые обсуждаемые предложения
       .tickets-list__wrapper

@@ -20,8 +20,9 @@ block content
                     img(src=`/img/${result.picture}`, alt='Изображение товара')
                   .ticket-card__info
                     +ticketLabel(result.type)
-                    each category in result.category
-                        a(href="#") #{category}
+                    .ticket-card__categories
+                      each category in result.category
+                          a(href="#") #{category}
                     .ticket-card__header
                       h3.ticket-card__title
                         a(href='#') #{result.title}

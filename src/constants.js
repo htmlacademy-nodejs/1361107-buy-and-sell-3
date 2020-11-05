@@ -89,6 +89,7 @@ exports.HELP_MESSAGE = `
 exports.DirPath = {
   PUBLIC: `public`,
   TEMPLATES: `templates`,
+  UPDATE: `upload`,
 };
 
 module.exports.Env = {
