@@ -126,24 +126,26 @@ const app = express();
 app.use(express.json());
 category(app, new DataService(mockData));
 
-describe(`API returns category list`, () => {
-  let response;
+describe(`/categories route works correctly:`, () => {
+  describe(`/categories GET request`, () => {
+    let response;
 
-  beforeAll(async () => {
-    response = await request(app).get(`/categories`);
-  });
+    beforeAll(async () => {
+      response = await request(app).get(`/categories`);
+    });
 
-  test(`Status code should be 200`, () => {
-    expect(response.statusCode).toBe(HttpCode.OK);
-  });
+    test(`returns 200 status code`, () => {
+      expect(response.statusCode).toBe(HttpCode.OK);
+    });
 
-  test(`Returned list length should be 3`, () => {
-    expect(response.body.length).toBe(3);
-  });
+    test(`returns list with correct length`, () => {
+      expect(response.body.length).toBe(3);
+    });
 
-  test(`List should contains "Игры", "Разное" and "Посуда"`, () => {
-    expect(response.body).toEqual(
-        expect.arrayContaining([`Игры`, `Разное`, `Посуда`])
-    );
+    test(`returns correct list of categories`, () => {
+      expect(response.body).toEqual(
+          expect.arrayContaining([`Игры`, `Разное`, `Посуда`])
+      );
+    });
   });
 });

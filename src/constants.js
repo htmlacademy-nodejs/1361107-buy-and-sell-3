@@ -13,7 +13,7 @@ exports.DataFileName = {
   titles: `data/titles.txt`,
   categories: `data/categories.txt`,
   sentences: `data/sentences.txt`,
-  comments: `data/comments.txt`
+  comments: `data/comments.txt`,
 };
 
 exports.MAX_OFFERS_NUMBER = 1000;
@@ -28,6 +28,7 @@ exports.SERVER_ERROR_MESSAGE = `Ошибка на стороне сервера`
 exports.HttpCode = {
   OK: 200,
   CREATED: 201,
+  NO_CONTENT: 204,
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
@@ -56,7 +57,7 @@ exports.MOCKS_FILE_NAME = `mocks.json`;
 
 exports.DEFAULT_OFFER_AMOUNT = 1;
 
-exports.ResponceMessage = {
+exports.ResponseMessage = {
   DATA_NOT_FOUND: `Данные не найдены`,
   API_ROUTE_NOT_FOUND: `Маршрут не найден`,
   PAGE_NOT_FOUND: `Страница не найдена`,
@@ -88,9 +89,10 @@ exports.HELP_MESSAGE = `
 exports.DirPath = {
   PUBLIC: `public`,
   TEMPLATES: `templates`,
+  UPDATE: `upload`,
 };
 
 module.exports.Env = {
   DEVELOPMENT: `development`,
-  PRODUCTION: `production`
+  PRODUCTION: `production`,
 };

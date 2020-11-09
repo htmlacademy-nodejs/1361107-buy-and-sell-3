@@ -1,6 +1,6 @@
 "use strict";
 
-const {HttpCode, ResponceMessage} = require(`../../../../constants`);
+const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 
 const offerRequiredKeys = [
   `category`,
@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
   const isKeysMatch = offerRequiredKeys.every((key) => offerKeys.includes(key));
 
   if (!isKeysMatch) {
-    return res.status(HttpCode.BAD_REQUEST).send(ResponceMessage.BAD_REQUEST);
+    return res.status(HttpCode.BAD_REQUEST).send(ResponseMessage.BAD_REQUEST);
   }
 
   return next();

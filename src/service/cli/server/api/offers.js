@@ -6,9 +6,10 @@ const offerExists = require(`../middleware/offer-exists`);
 const offerValidator = require(`../middleware/offer-validator`);
 const commentValidator = require(`../middleware/comment-validator`);
 
-const route = new Router();
 
 module.exports = (app, offersService, commentsService) => {
+  const route = new Router();
+
   route.get(`/`, (req, res) => {
     const offers = offersService.findAll();
     return res.status(HttpCode.OK).json(offers);
@@ -33,11 +34,11 @@ module.exports = (app, offersService, commentsService) => {
     return res.status(HttpCode.OK).json(updatedOffer);
   });
 
-  route.delete(`/:offerId`, offerExists(offersService), (req, res) => {
+  route.delete(`/:offerId`, (req, res) => {
     const {offerId} = req.params;
-    const deletedOffer = offersService.delete(offerId);
+    offersService.delete(offerId);
 
-    return res.status(HttpCode.OK).json(deletedOffer);
+    return res.status(HttpCode.NO_CONTENT).json({});
   });
 
   route.get(`/:offerId/comments`, offerExists(offersService), (req, res) => {
@@ -52,13 +53,9 @@ module.exports = (app, offersService, commentsService) => {
     const {offer} = res.locals;
     const {commentId} = req.params;
 
-    const deletedComment = commentsService.delete(offer, commentId);
+    commentsService.delete(offer, commentId);
 
-    if (!deletedComment) {
-      return res.status(HttpCode.NOT_FOUND).send(`Комментарий с id ${commentId} не найден`);
-    }
-
-    return res.status(HttpCode.OK).json(deletedComment);
+    return res.status(HttpCode.NO_CONTENT).json({});
   });
 
   route.post(`/:offerId/comments`, [offerExists(offersService), commentValidator], (req, res) => {
