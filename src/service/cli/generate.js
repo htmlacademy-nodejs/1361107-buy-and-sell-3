@@ -9,22 +9,13 @@ const {
   OfferType,
   MAX_DESCR_SIZE,
   SumRestrict,
-  PictureRestrict,
   MOCKS_FILE_NAME,
   DEFAULT_OFFER_AMOUNT,
   DataFileName,
   MAX_ID_LENGTH,
   CommentRestrict,
 } = require(`../../constants`);
-const {getRandomInt, shuffle, readContent} = require(`../../utils`);
-
-const getPictureFileName = () => {
-  let number = getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX);
-
-  number = number < 10 ? `0${number}` : number;
-
-  return `item${number}.jpg`;
-};
+const {getRandomInt, shuffle, readContent, getPictureFileName} = require(`../../utils`);
 
 const generateCommentList = (commentsAmount, comments) => {
   return Array(commentsAmount)
