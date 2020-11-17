@@ -14,6 +14,8 @@ exports.DataFileName = {
   categories: `data/categories.txt`,
   sentences: `data/sentences.txt`,
   comments: `data/comments.txt`,
+  firstNames: `data/firstnames.txt`,
+  lastNames: `data/lastnames.txt`
 };
 
 exports.MAX_OFFERS_NUMBER = 1000;
@@ -55,6 +57,8 @@ exports.PictureRestrict = {
 
 exports.MOCKS_FILE_NAME = `mocks.json`;
 
+exports.FILL_DB_FILE_NAME = `fill-db.sql`;
+
 exports.DEFAULT_OFFER_AMOUNT = 1;
 
 exports.ResponseMessage = {
@@ -84,6 +88,7 @@ exports.HELP_MESSAGE = `
   --help:               печатает этот текст
   --generate <count>    формирует файл mocks.json
   --server <port>       запускает веб-сервер на указаном порте
+  --fill <count>        создает sql-файл c запросами для заполнения базы данных
 `;
 
 exports.DirPath = {
