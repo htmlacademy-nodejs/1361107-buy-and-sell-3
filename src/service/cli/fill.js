@@ -59,8 +59,19 @@ const generateCommentsQuery = (commentsCount, commentSentenceList) => {
       });
   };
 
+  let currentOfferId = 1;
+  let currentOfferCount = 0;
+
   const comments = generateCommentList(commentsCount, commentSentenceList).map(
-      (comment) => `(DEFAULT, '${comment}')`
+      (comment) => {
+        const userId = getRandomInt(1, commentsCount / 2);
+        if (currentOfferCount === 2) {
+          currentOfferCount = 0;
+          currentOfferId++;
+        }
+        currentOfferCount++;
+        return `(DEFAULT, '${comment}', ${userId}, ${currentOfferId})`;
+      }
   );
 
   return generateInsertQuery(`comments`, comments.join(`,`));
@@ -107,36 +118,6 @@ const generateOffersCategoriesQuery = (offersCount, categoryListLength) => {
   return generateInsertQuery(`offers_categories`, values.join(`, `));
 };
 
-const generateCommentsUsersQuery = (commentsCount, usersCount) => {
-  const values = [];
-
-  for (let commentId = 1; commentId <= commentsCount; commentId++) {
-    const userId = getRandomInt(1, usersCount);
-
-    values.push(`(${commentId}, ${userId})`);
-  }
-
-  return generateInsertQuery(`comments_users`, values.join(`, `));
-};
-
-const generateCommentsOffersQuery = (commentsCount) => {
-  const values = [];
-
-  let currentOfferId = 1;
-  let currentOfferCount = 0;
-
-  for (let commentId = 1; commentId <= commentsCount; commentId++) {
-    if (currentOfferCount === 2) {
-      currentOfferCount = 0;
-      currentOfferId++;
-    }
-    values.push(`(${commentId}, ${currentOfferId})`);
-    currentOfferCount++;
-  }
-
-  return generateInsertQuery(`comments_offers`, values.join(`, `));
-};
-
 const generateFile = (offersCount, dataList) => {
   const commentsCount = offersCount * 2;
   const usersCount = offersCount;
@@ -148,11 +129,9 @@ const generateFile = (offersCount, dataList) => {
       generateUsersQuery(usersCount, dataList.firstNames, dataList.lastNames)
   );
   queryList.push(generateOfferTypesQuery());
-  queryList.push(generateCommentsQuery(commentsCount, dataList.comments));
   queryList.push(generateOffersQuery(offersCount, dataList.titles, dataList.sentences));
+  queryList.push(generateCommentsQuery(commentsCount, dataList.comments));
   queryList.push(generateOffersCategoriesQuery(offersCount, dataList.categories.length));
-  queryList.push(generateCommentsUsersQuery(commentsCount, usersCount));
-  queryList.push(generateCommentsOffersQuery(commentsCount));
 
   return queryList.join(` `);
 };

@@ -38,9 +38,9 @@ SELECT
 	users.email,
 	(
 		SELECT
-			count(comments_offers.comment_id)
-		FROM comments_offers
-		WHERE comments_offers.offer_id = offers.id
+			count(comments.id)
+		FROM comments
+		WHERE comments.offer_id = offers.id
 	) as "comment_amount",
 	(
 		SELECT
@@ -71,9 +71,9 @@ SELECT
 	users.email,
 	(
 		SELECT
-			count(comments_offers.comment_id)
-		FROM comments_offers
-		WHERE comments_offers.offer_id = offers.id
+			count(comments.id)
+		FROM comments
+		WHERE comments.offer_id = offers.id
 	) as "comment_amount",
 	(
 		SELECT
@@ -89,40 +89,31 @@ INNER JOIN offer_types
 INNER JOIN users
 	ON offers.owner = users.id
 WHERE offers.id = 1
-ORDER BY offers.created_date DESC
 
 -- Список из 5 свежих комментариев
 SELECT
 	comments.id as "comment_id",
-	comments_offers.offer_id,
+	comments.offer_id,
 	users.firstname,
 	users.lastname,
 	comments.text
 FROM comments
-INNER JOIN comments_offers
-	ON comments.id = comments_offers.comment_id
-INNER JOIN comments_users
-	ON comments.id = comments_users.comment_id
 INNER JOIN users
-	ON comments_users.user_id = users.id
+	ON comments.user_id = users.id
 ORDER BY comments.id DESC
 LIMIT 5
 
 -- Список комментариев для определённого объявления
 SELECT
 	comments.id as "comment_id",
-	comments_offers.offer_id,
+	comments.offer_id,
 	users.firstname,
 	users.lastname,
 	comments.text
-FROM comments_offers
-INNER JOIN comments
-	ON comments_offers.comment_id = comments.id
-INNER JOIN comments_users
-	ON comments_offers.comment_id = comments_users.comment_id
+FROM comments
 INNER JOIN users
-	ON comments_users.user_id = users.id
-WHERE comments_offers.offer_id = 3
+	ON comments.user_id = users.id
+WHERE comments.offer_id = 3
 
 -- 2 объявления, соответствующих типу куплю
 SELECT 
@@ -138,9 +129,9 @@ SELECT
 	users.email,
 	(
 		SELECT
-			count(comments_offers.comment_id)
-		FROM comments_offers
-		WHERE comments_offers.offer_id = offers.id
+			count(comments.id)
+		FROM comments
+		WHERE comments.offer_id = offers.id
 	) as "comment_amount",
 	(
 		SELECT
