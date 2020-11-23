@@ -9,12 +9,12 @@ const myRouter = require(`./routes/my-routes`);
 const offersRouter = require(`./routes/offers-routes`);
 const searchRouter = require(`./routes/search-routes`);
 const {
-  DEFAULT_RENDER_PORT,
   HttpCode,
   DirPath,
   ExitCode
 } = require(`../constants`);
 const chalk = require(`chalk`);
+const config = require(`../config`);
 
 const app = express();
 
@@ -36,11 +36,11 @@ app.use((err, req, res) => {
   return res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
 });
 
-app.listen(DEFAULT_RENDER_PORT, (err) => {
+app.listen(config.FRONT_PORT, (err) => {
   if (err) {
     console.log(chalk.red(`Неудалось запустить сервер`));
     process.exit(ExitCode.ERROR);
   }
 
-  console.log(chalk.gray(`Сервер запущен, порт: ${DEFAULT_RENDER_PORT}`));
+  console.log(chalk.gray(`Сервер запущен, порт: ${config.FRONT_PORT}`));
 });
