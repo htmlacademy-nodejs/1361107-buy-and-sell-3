@@ -126,8 +126,11 @@ module.exports = {
       );
       logger.info(`Database successfully filled with data.`);
       sequelize.close();
+      process.exit(ExitCode.SUCCESS);
     } catch (err) {
-      logger.error(`Failed to fill database: ${err.stack}`);
+      logger.error(`Failed to fill database: ${err.message}`);
+      sequelize.close();
+      process.exit(ExitCode.ERROR);
     }
   },
 };
