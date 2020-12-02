@@ -2,7 +2,7 @@
 
 const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 
-const commentRequiredKeys = [`text`];
+const commentRequiredKeys = [`text`, `userId`];
 
 module.exports = (req, res, next) => {
   req.body = commentRequiredKeys.reduce((acc, key) => {

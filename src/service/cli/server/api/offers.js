@@ -41,26 +41,26 @@ module.exports = (app, offersService, commentsService) => {
     return res.status(HttpCode.NO_CONTENT).json({});
   });
 
-  route.get(`/:offerId/comments`, offerExists(offersService), (req, res) => {
+  route.get(`/:offerId/comments`, offerExists(offersService), async (req, res) => {
     const {offer} = res.locals;
 
-    const comments = commentsService.findAll(offer);
+    const comments = await commentsService.findAll(offer);
 
     return res.status(HttpCode.OK).json(comments);
   });
 
-  route.delete(`/:offerId/comments/:commentId`, offerExists(offersService), (req, res) => {
+  route.delete(`/:offerId/comments/:commentId`, offerExists(offersService), async (req, res) => {
     const {offer} = res.locals;
     const {commentId} = req.params;
 
-    commentsService.delete(offer, commentId);
+    await commentsService.delete(offer, commentId);
 
     return res.status(HttpCode.NO_CONTENT).json({});
   });
 
-  route.post(`/:offerId/comments`, [offerExists(offersService), commentValidator], (req, res) => {
+  route.post(`/:offerId/comments`, [offerExists(offersService), commentValidator], async (req, res) => {
     const {offer} = res.locals;
-    const newComment = commentsService.create(offer, req.body);
+    const newComment = await commentsService.create(offer, req.body);
 
     return res.status(HttpCode.OK).json(newComment);
   });
