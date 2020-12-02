@@ -20,8 +20,8 @@ exports.DataFileName = {
 
 exports.MAX_OFFERS_NUMBER = 1000;
 
-exports.NOT_FOUND_MESSAGE = `Ничего не найдено`;
-exports.SERVER_ERROR_MESSAGE = `Ошибка на стороне сервера`;
+exports.NOT_FOUND_MESSAGE = `Not found.`;
+exports.SERVER_ERROR_MESSAGE = `Internal server error.`;
 
 exports.HttpCode = {
   OK: 200,
@@ -58,10 +58,10 @@ exports.FILL_DB_FILE_NAME = `fill-db.sql`;
 exports.DEFAULT_OFFER_AMOUNT = 1;
 
 exports.ResponseMessage = {
-  DATA_NOT_FOUND: `Данные не найдены`,
-  API_ROUTE_NOT_FOUND: `Маршрут не найден`,
-  PAGE_NOT_FOUND: `Страница не найдена`,
-  BAD_REQUEST: `Получены неверные данные`,
+  DATA_NOT_FOUND: `Data not found.`,
+  API_ROUTE_NOT_FOUND: `Route not found.`,
+  PAGE_NOT_FOUND: `Page not found.`,
+  BAD_REQUEST: `Invalid data.`,
 };
 
 exports.API_PREFIX = `/api`;
