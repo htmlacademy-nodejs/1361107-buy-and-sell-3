@@ -1,17 +1,12 @@
 "use strict";
 
+const {db} = require(`../db/db`);
+
 class CategoryService {
-  constructor(offers) {
-    this._offers = offers;
-  }
+  async findAll() {
+    const categories = await db.Category.findAll();
 
-  findAll() {
-    const categories = this._offers.reduce((acc, offer) => {
-      offer.category.forEach((category) => acc.add(category));
-      return acc;
-    }, new Set());
-
-    return [...categories];
+    return categories;
   }
 }
 
