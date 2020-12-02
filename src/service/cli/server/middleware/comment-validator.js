@@ -1,6 +1,7 @@
 "use strict";
 
 const {HttpCode, ResponseMessage} = require(`../../../../constants`);
+const {AppError} = require(`../../../../utils`);
 
 const commentRequiredKeys = [`text`, `userId`];
 
@@ -17,7 +18,7 @@ module.exports = (req, res, next) => {
   );
 
   if (!isKeysMatch) {
-    return res.status(HttpCode.BAD_REQUEST).send(ResponseMessage.BAD_REQUEST);
+    return next(new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST));
   }
 
   return next();

@@ -28,13 +28,13 @@ class OffersService {
       returning: true,
     });
 
-    const offer = result[1][0];
-
     if (offerData.category) {
+      const offer = await db.Offer.findByPk(id);
       await offer.setCategories(offerData.category);
+      return offer;
     }
 
-    return offer;
+    return result[1][0];
   }
 
   async delete(id) {

@@ -16,7 +16,5 @@ module.exports = (req, res, next) => {
     return acc;
   }, {});
 
-  console.log(req.body);
-
   return next();
 };

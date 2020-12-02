@@ -140,3 +140,9 @@ exports.getSequelizeQueryOptions = (model, db) => {
 
   return options[model];
 };
+
+exports.DBErrorName = {
+  FOREIGN_KEY_ERROR: `SequelizeForeignKeyConstraintError`,
+  DATABASE_ERROR: `SequelizeDatabaseError`,
+  VALIDATION_ERROR: `SequelizeValidationError`
+};
