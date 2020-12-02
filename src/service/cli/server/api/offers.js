@@ -23,7 +23,7 @@ module.exports = (app, offersService, commentsService) => {
   route.get(
       `/:offerId`,
       offerExists(offersService),
-      catchAsync((req, res) => {
+      catchAsync(async (req, res) => {
         const {offer} = res.locals;
 
         return res.status(HttpCode.OK).json(offer);
