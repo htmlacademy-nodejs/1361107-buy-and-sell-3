@@ -10,7 +10,8 @@
     "start": "cross-env LOG_LEVEL=error node ./src/service/service.js",
     "start::debug": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/service.js",
     "start-rest-server": "cross-env LOG_LEVEL=debug NODE_ENV=development nodemon ./src/service/service.js --server",
-    "start-front-server": "nodemon ./src/express/index.js"
+    "start-front-server": "nodemon ./src/express/index.js",
+    "init-db": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/cli/server/db/init-db.js"
   },
   "repository": {
     "type": "git",
