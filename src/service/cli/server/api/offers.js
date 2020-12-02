@@ -3,15 +3,15 @@
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../../../constants`);
 const offerExists = require(`../middleware/offer-exists`);
-const offerValidator = require(`../middleware/offer-validator`);
+const newOfferValidator = require(`../middleware/new-offer-validator`);
 const commentValidator = require(`../middleware/comment-validator`);
-
+const updateOfferValidator = require(`../middleware/update-offer-validator`);
 
 module.exports = (app, offersService, commentsService) => {
   const route = new Router();
 
-  route.get(`/`, (req, res) => {
-    const offers = offersService.findAll();
+  route.get(`/`, async (req, res) => {
+    const offers = await offersService.findAll();
     return res.status(HttpCode.OK).json(offers);
   });
 
@@ -21,22 +21,22 @@ module.exports = (app, offersService, commentsService) => {
     return res.status(HttpCode.OK).json(offer);
   });
 
-  route.post(`/`, offerValidator, (req, res) => {
-    const newOffer = offersService.create(req.body);
+  route.post(`/`, newOfferValidator, async (req, res) => {
+    const newOffer = await offersService.create(req.body);
 
     return res.status(HttpCode.CREATED).json(newOffer);
   });
 
-  route.put(`/:offerId`, [offerExists(offersService), offerValidator], (req, res) => {
+  route.put(`/:offerId`, [offerExists(offersService), updateOfferValidator], async (req, res) => {
     const {offerId} = req.params;
-    const updatedOffer = offersService.update(offerId, req.body);
+    const updatedOffer = await offersService.update(offerId, req.body);
 
     return res.status(HttpCode.OK).json(updatedOffer);
   });
 
-  route.delete(`/:offerId`, (req, res) => {
+  route.delete(`/:offerId`, async (req, res) => {
     const {offerId} = req.params;
-    offersService.delete(offerId);
+    await offersService.delete(offerId);
 
     return res.status(HttpCode.NO_CONTENT).json({});
   });

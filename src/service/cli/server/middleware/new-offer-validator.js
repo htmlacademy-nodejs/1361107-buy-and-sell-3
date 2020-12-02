@@ -7,8 +7,8 @@ const offerRequiredKeys = [
   `description`,
   `picture`,
   `title`,
-  `type`,
-  `sum`,
+  `typeId`,
+  `userId`,
 ];
 
 module.exports = (req, res, next) => {
