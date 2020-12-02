@@ -93,7 +93,42 @@ exports.DirPath = {
   UPDATE: `upload`,
 };
 
-module.exports.Env = {
+exports.Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`,
+};
+
+exports.getSequelizeQueryOptions = (model, db) => {
+  const options = {
+    Offer: {
+      attributes: {exclude: [`userId`, `typeId`]},
+      include: [
+        {
+          model: db.User,
+          as: `owner`,
+          attributes: [`id`, `firstName`, `lastName`, `email`],
+        },
+        {model: db.OfferType, as: `offerType`},
+        {
+          model: db.Comment,
+          as: `comments`,
+          attributes: {exclude: [`userId`, `offerId`]},
+          include: {
+            model: db.User,
+            as: `user`,
+            attributes: [`id`, `firstName`, `lastName`, `email`],
+          },
+        },
+        {
+          model: db.Category,
+          as: `categories`,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    }
+  };
+
+  return options[model];
 };
