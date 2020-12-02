@@ -100,3 +100,9 @@ class AppError extends Error {
 }
 
 exports.AppError = AppError;
+
+exports.getCardColor = () => {
+  let number = getRandomInt(1, 16);
+
+  return number < 10 ? `0${number}` : number;
+};

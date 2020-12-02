@@ -8,11 +8,7 @@ const loginRouter = require(`./routes/login-routes`);
 const myRouter = require(`./routes/my-routes`);
 const offersRouter = require(`./routes/offers-routes`);
 const searchRouter = require(`./routes/search-routes`);
-const {
-  HttpCode,
-  DirPath,
-  ExitCode
-} = require(`../constants`);
+const {HttpCode, DirPath, ExitCode} = require(`../constants`);
 const chalk = require(`chalk`);
 const config = require(`../config`);
 
@@ -31,9 +27,16 @@ app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
 
 app.use((req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/400`));
-app.use((err, req, res) => {
-  console.trace(err);
-  return res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
+app.use((err, req, res, _next) => {
+  const statusCode = err.response
+    ? err.response.status
+    : HttpCode.INTERNAL_SERVER_ERROR;
+  if (statusCode < 500) {
+    return res
+      .status(err.response.status)
+      .render(`errors/400`, {statusCode, message: err.response.data.message});
+  }
+  return res.status(statusCode).render(`errors/500`);
 });
 
 app.listen(config.FRONT_PORT, (err) => {

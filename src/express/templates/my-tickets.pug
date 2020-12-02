@@ -17,12 +17,12 @@ block content
                 .ticket-card__info
                   +ticketLabel(itemOffer.type)
                   .ticket-card__categories
-                    each category in itemOffer.category
-                      a(href='#') #{category}
+                    each category in itemOffer.categories
+                      a(href='#') #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
                       a(href='#') #{itemOffer.title}
                     p.ticket-card__price
-                      span.js-sum #{itemOffer.sum}
+                      span.js-sum #{itemOffer.cost}
                       |  ₽
                 button.ticket-card__del.js-delete(type='button') Удалить

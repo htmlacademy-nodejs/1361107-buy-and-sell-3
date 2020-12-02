@@ -25,11 +25,11 @@ const handleValidationErrorDB = (err) => {
 
 const sendErrorProd = (err, res) => {
   if (err.isOperational) {
-    res.status(err.statusCode).send(err.message);
+    res.status(err.statusCode).json({message: err.message});
   } else {
     res
       .status(HttpCode.INTERNAL_SERVER_ERROR)
-      .send(`Something went very wrong`);
+      .json({message: `Something went very wrong`});
   }
 };
 
