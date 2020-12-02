@@ -1,10 +1,12 @@
 "use strict";
 
-const {db} = require(`../db/db`);
-
 class CategoryService {
+  constructor(db) {
+    this._db = db;
+  }
+
   async findAll() {
-    const categories = await db.Category.findAll();
+    const categories = await this._db.Category.findAll();
 
     return categories;
   }

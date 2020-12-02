@@ -1,11 +1,14 @@
 "use strict";
 
-const {db} = require(`../db/db`);
 const {getSequelizeQueryOptions} = require(`../../../../constants`);
 
 class CommentsService {
+  constructor(db) {
+    this._db = db;
+  }
+
   async findAll(offer) {
-    return await offer.getComments(getSequelizeQueryOptions(`Comment`, db));
+    return await offer.getComments(getSequelizeQueryOptions(`Comment`, this._db));
   }
 
   async delete(offer, commentId) {

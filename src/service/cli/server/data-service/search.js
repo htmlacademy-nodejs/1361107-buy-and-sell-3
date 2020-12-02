@@ -1,12 +1,15 @@
 "use strict";
 
 const {getSequelizeQueryOptions} = require(`../../../../constants`);
-const {db} = require(`../db/db`);
 
 class SearchService {
+  constructor(db) {
+    this._db = db;
+  }
+
   async findAll(searchText) {
-    const offers = await db.Offer.findAll(
-        getSequelizeQueryOptions(`Offer`, db)
+    const offers = await this._db.Offer.findAll(
+        getSequelizeQueryOptions(`Offer`, this._db)
     );
 
     return offers.filter((offer) =>
