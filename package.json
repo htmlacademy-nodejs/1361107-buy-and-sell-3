@@ -5,7 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "test": "npm run eslint && npm run test::rest",
-    "test::rest": "jest --testPathPattern=src/service",
+    "test::rest": "jest --testPathPattern=src/service --runInBand",
     "eslint": "eslint --ext .js src/",
     "start": "cross-env LOG_LEVEL=error node ./src/service/service.js",
     "start::debug": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/service.js",
