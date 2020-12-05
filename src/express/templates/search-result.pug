@@ -21,13 +21,13 @@ block content
                   .ticket-card__info
                     +ticketLabel(result.type)
                     .ticket-card__categories
-                      each category in result.category
-                          a(href="#") #{category}
+                      each category in result.categories
+                          a(href="#") #{category.name}
                     .ticket-card__header
                       h3.ticket-card__title
                         a(href='#') #{result.title}
                       p.ticket-card__price
-                        span.js-sum #{result.sum}
+                        span.js-sum #{result.cost}
                         |  ₽
                     .ticket-card__desc
                       p #{result.description}

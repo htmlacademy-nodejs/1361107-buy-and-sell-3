@@ -11,19 +11,19 @@ block content
         ul
           each itemOffer in listOffers
             li.tickets-list__item
-              .ticket-card.ticket-card--color01
+              div(class=`ticket-card ticket-card--color${itemOffer.cardColor}`)
                 .ticket-card__img
                   img(src=`/img/${itemOffer.picture}`, alt='Изображение товара')
                 .ticket-card__info
                   +ticketLabel(itemOffer.type)
                   .ticket-card__categories
-                    each category in itemOffer.category
-                      a(href='#') #{category}
+                    each category in itemOffer.categories
+                      a(href='#') #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
                       a(href='#') #{itemOffer.title}
                     p.ticket-card__price
-                      span.js-sum #{itemOffer.sum}
+                      span.js-sum #{itemOffer.cost}
                       |  ₽
                   .ticket-card__desc
                     p #{itemOffer.description}

@@ -1,14 +1,16 @@
 "use strict";
 
 const {HttpCode, ResponseMessage} = require(`../../../../constants`);
+const {AppError} = require(`../../../../utils`);
 
 const offerRequiredKeys = [
   `category`,
   `description`,
   `picture`,
   `title`,
-  `type`,
-  `sum`,
+  `cost`,
+  `typeId`,
+  `userId`,
 ];
 
 module.exports = (req, res, next) => {
@@ -22,7 +24,7 @@ module.exports = (req, res, next) => {
   const isKeysMatch = offerRequiredKeys.every((key) => offerKeys.includes(key));
 
   if (!isKeysMatch) {
-    return res.status(HttpCode.BAD_REQUEST).send(ResponseMessage.BAD_REQUEST);
+    return next(new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST));
   }
 
   return next();

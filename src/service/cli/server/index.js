@@ -11,6 +11,7 @@ const {
 const {getLogger} = require(`../../lib/logger`);
 const routes = require(`./api`);
 const {sequelize} = require(`./db/db`);
+const globalErrorHandler = require(`./middleware/global-error-handler`);
 
 const logger = getLogger({name: `api`});
 
@@ -33,8 +34,8 @@ app.use((req, res) => {
   logger.error(`Route not found: ${req.url}`);
 });
 
-app.use((err, _req, _res, _next) => {
-  logger.error(`An error occured on processing request: ${err.message}`);
+app.use((err, req, res, _next) => {
+  globalErrorHandler(err, req, res);
 });
 
 module.exports = {

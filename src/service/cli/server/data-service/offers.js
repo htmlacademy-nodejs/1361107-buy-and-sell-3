@@ -1,45 +1,51 @@
 "use strict";
 
-const {nanoid} = require(`nanoid`);
-const {MAX_ID_LENGTH} = require(`../../../../constants`);
+const {getSequelizeQueryOptions} = require(`../../../../constants`);
 
 class OffersService {
-  constructor(offers) {
-    this._offers = offers;
+  constructor(db) {
+    this._db = db;
   }
 
-  findAll() {
-    return this._offers;
+  async findAll() {
+    return await this._db.Offer.findAll(getSequelizeQueryOptions(`Offer`, this._db));
   }
 
-  findOne(id) {
-    return this._offers.find((offer) => offer.id === id);
+  async findOne(id) {
+    return await this._db.Offer.findByPk(id, getSequelizeQueryOptions(`Offer`, this._db));
   }
 
-  create(offerData) {
-    const newOffer = {id: nanoid(MAX_ID_LENGTH), comments: [], ...offerData};
+  async create(offerData) {
+    const newOffer = await this._db.Offer.create(offerData);
 
-    this._offers.push(newOffer);
+    await newOffer.addCategories(offerData.category);
 
     return newOffer;
   }
 
-  update(id, offerData) {
-    const oldOfferIndex = this._offers.findIndex((offer) => offer.id === id);
+  async update(id, offerData) {
+    const result = await this._db.Offer.update(offerData, {
+      where: {
+        id,
+      },
+      returning: true,
+    });
 
-    this._offers[oldOfferIndex] = {...this._offers[oldOfferIndex], ...offerData};
-
-    return this._offers[oldOfferIndex];
-  }
-
-  delete(id) {
-    const deletingOfferIndex = this._offers.findIndex((offer) => offer.id === id);
-
-    if (deletingOfferIndex === -1) {
-      return;
+    if (offerData.category) {
+      const offer = await this._db.Offer.findByPk(id);
+      await offer.setCategories(offerData.category);
+      return offer;
     }
 
-    this._offers.splice(deletingOfferIndex, 1);
+    return result[1][0];
+  }
+
+  async delete(id) {
+    await this._db.Offer.destroy({
+      where: {
+        id,
+      },
+    });
   }
 }
 

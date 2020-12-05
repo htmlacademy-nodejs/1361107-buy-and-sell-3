@@ -10,8 +10,8 @@ html.html-not-found(lang='ru')
   body.body-not-found
     main
       section.error
-        h1.error__title 404
-        h2.error__subtitle Страница не найдена
+        h1.error__title #{statusCode}
+        h2.error__subtitle #{message}
         ul.error__list
           li.error__item
             a(href='/register') Вход и регистрация

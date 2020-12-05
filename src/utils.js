@@ -82,3 +82,31 @@ exports.getCreatedDate = () => {
 
   return date.toISOString();
 };
+
+exports.catchAsync = (fn) => {
+  return (req, res, next) => {
+    try {
+      fn(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = true;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+exports.AppError = AppError;
+
+exports.getCardColor = () => {
+  let number = getRandomInt(1, 16);
+
+  return number < 10 ? `0${number}` : number;
+};
