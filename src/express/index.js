@@ -8,7 +8,12 @@ const loginRouter = require(`./routes/login-routes`);
 const myRouter = require(`./routes/my-routes`);
 const offersRouter = require(`./routes/offers-routes`);
 const searchRouter = require(`./routes/search-routes`);
-const {HttpCode, DirPath, ExitCode} = require(`../constants`);
+const {
+  HttpCode,
+  DirPath,
+  ExitCode,
+  ResponseMessage,
+} = require(`../constants`);
 const chalk = require(`chalk`);
 const config = require(`../config`);
 
@@ -26,7 +31,12 @@ app.use(`/my`, myRouter);
 app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
 
-app.use((req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/400`));
+app.use((req, res) =>
+  res.status(HttpCode.NOT_FOUND).render(`errors/400`, {
+    statusCode: HttpCode.NOT_FOUND,
+    message: ResponseMessage.PAGE_NOT_FOUND,
+  })
+);
 app.use((err, req, res, _next) => {
   const statusCode = err.response
     ? err.response.status

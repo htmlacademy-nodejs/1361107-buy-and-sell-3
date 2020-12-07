@@ -68,6 +68,8 @@ exports.API_PREFIX = `/api`;
 
 exports.MAX_ID_LENGTH = 6;
 
+exports.PAGINATION_OFFSET = 8;
+
 exports.CommentRestrict = {
   MAX_SENTENCES_AMOUNT: 3,
   MAX_COMMENTS_AMOUNT: 5,

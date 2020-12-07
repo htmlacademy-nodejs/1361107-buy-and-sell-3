@@ -14,9 +14,10 @@ module.exports = (app, offersService, commentsService) => {
   route.get(
       `/`,
       catchAsync(async (req, res) => {
-        const offers = await offersService.findAll();
+        const page = +req.query.page || 1;
+        const result = await offersService.findAll(page);
 
-        return res.status(HttpCode.OK).json(offers);
+        return res.status(HttpCode.OK).json(result);
       })
   );
 

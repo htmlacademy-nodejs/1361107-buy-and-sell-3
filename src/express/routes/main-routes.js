@@ -1,7 +1,8 @@
 "use strict";
 
 const {Router} = require(`express`);
-const {getCardColor, catchAsync} = require(`../../utils`);
+const {PAGINATION_OFFSET} = require(`../../constants`);
+const {getCardColor, catchAsync, getPageList} = require(`../../utils`);
 const api = require(`../api`).getAPI();
 
 const mainRouter = new Router();
@@ -9,11 +10,14 @@ const mainRouter = new Router();
 mainRouter.get(
     `/`,
     catchAsync(async (req, res) => {
-      const listOffers = await api.getOffers();
+      const page = +req.query.page || 1;
+      const {count, rows: listOffers} = await api.getOffers(page);
       listOffers.forEach((offer) => {
         offer.cardColor = getCardColor();
       });
-      res.render(`main`, {listOffers});
+      const maxPage = Math.ceil(count / PAGINATION_OFFSET);
+      const pageList = getPageList(page, maxPage);
+      return res.render(`main`, {page, maxPage, pageList, listOffers});
     })
 );
 

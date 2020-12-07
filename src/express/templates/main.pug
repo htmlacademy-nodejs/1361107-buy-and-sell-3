@@ -8,25 +8,49 @@ block content
       .tickets-list__wrapper
         .tickets-list__header
           p.tickets-list__title Самое свежее
-        ul
-          each itemOffer in listOffers
-            li.tickets-list__item
-              div(class=`ticket-card ticket-card--color${itemOffer.cardColor}`)
-                .ticket-card__img
-                  img(src=`/img/${itemOffer.picture}`, alt='Изображение товара')
-                .ticket-card__info
-                  +ticketLabel(itemOffer.type)
-                  .ticket-card__categories
-                    each category in itemOffer.categories
-                      a(href='#') #{category.name}
-                  .ticket-card__header
-                    h3.ticket-card__title
-                      a(href='#') #{itemOffer.title}
-                    p.ticket-card__price
-                      span.js-sum #{itemOffer.cost}
-                      |  ₽
-                  .ticket-card__desc
-                    p #{itemOffer.description}
+        if maxPage !== 0
+          if listOffers.length === 0
+            .message
+              .message__text
+                p Ничего не найдено
+          else
+            ul
+              each itemOffer in listOffers
+                li.tickets-list__item
+                  div(class=`ticket-card ticket-card--color${itemOffer.cardColor}`)
+                    .ticket-card__img
+                      img(src=`/img/${itemOffer.picture}`, alt='Изображение товара')
+                    .ticket-card__info
+                      +ticketLabel(itemOffer.offerType.name)
+                      .ticket-card__categories
+                        each category in itemOffer.categories
+                          a(href='#') #{category.name}
+                      .ticket-card__header
+                        h3.ticket-card__title
+                          a(href='#') #{itemOffer.title}
+                        p.ticket-card__price
+                          span.js-sum #{itemOffer.cost}
+                          |  ₽
+                      .ticket-card__desc
+                        p #{itemOffer.description}
+            if pageList.length > 1 && listOffers.length !== 0
+              .tickets-list__pagination
+                ul.pagination
+                  li
+                    a(href="/?page=1") <<
+                  li
+                    a(href=`/?page=${page === 1 ? 1 : page - 1}`) <
+                  each pageNumber of pageList
+                    li
+                      a(href=`/?page=${pageNumber}`, class={active: page === pageNumber}) #{pageNumber}
+                  li
+                    a(href=`/?page=${page === maxPage ? maxPage : page + 1}`) >
+                  li
+                    a(href=`/?page=${maxPage}`) >>
+        else
+          .message
+            .message__text
+              p На сайте еще не опубликовано ни одного объявления.
     section.tickets-list
       h2.visually-hidden Самые обсуждаемые предложения
       .tickets-list__wrapper

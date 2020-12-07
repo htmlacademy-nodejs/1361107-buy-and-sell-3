@@ -1,18 +1,26 @@
 "use strict";
 
-const {getSequelizeQueryOptions} = require(`../../../../constants`);
+const {getSequelizeQueryOptions, PAGINATION_OFFSET} = require(`../../../../constants`);
 
 class OffersService {
   constructor(db) {
     this._db = db;
   }
 
-  async findAll() {
-    return await this._db.Offer.findAll(getSequelizeQueryOptions(`Offer`, this._db));
+  async findAll(page) {
+    return await this._db.Offer.findAndCountAll({
+      ...getSequelizeQueryOptions(`Offer`, this._db),
+      distinct: true,
+      limit: PAGINATION_OFFSET,
+      offset: PAGINATION_OFFSET * (page - 1),
+    });
   }
 
   async findOne(id) {
-    return await this._db.Offer.findByPk(id, getSequelizeQueryOptions(`Offer`, this._db));
+    return await this._db.Offer.findByPk(
+        id,
+        getSequelizeQueryOptions(`Offer`, this._db)
+    );
   }
 
   async create(offerData) {
@@ -31,15 +39,13 @@ class OffersService {
       returning: true,
     });
 
-    const updatedOffer = result[1][0];
-
     if (offerData.category) {
       const offer = await this._db.Offer.findByPk(id);
       await offer.setCategories(offerData.category);
       return offer;
     }
 
-    return updatedOffer;
+    return result[1][0];
   }
 
   async delete(id) {
