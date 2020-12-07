@@ -20,15 +20,11 @@ module.exports = (app, offersService, commentsService) => {
       })
   );
 
-  route.get(
-      `/:offerId`,
-      offerExists(offersService),
-      catchAsync(async (req, res) => {
-        const {offer} = res.locals;
+  route.get(`/:offerId`, offerExists(offersService), (req, res) => {
+    const {offer} = res.locals;
 
-        return res.status(HttpCode.OK).json(offer);
-      })
-  );
+    return res.status(HttpCode.OK).json(offer);
+  });
 
   route.post(
       `/`,
