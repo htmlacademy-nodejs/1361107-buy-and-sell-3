@@ -42,7 +42,7 @@ block content
                     a(href=`/?page=${page === 1 ? 1 : page - 1}`) <
                   each pageNumber of pageList
                     li
-                      a(href=`/?page=${pageNumber}`, class={active: page === pageNumber}) #{pageNumber}
+                      a(href=`/?page=${pageNumber}`, class={active: page === pageNumber}, style=`${page === pageNumber ? "pointer-events: none" : ""}`) #{pageNumber}
                   li
                     a(href=`/?page=${page === maxPage ? maxPage : page + 1}`) >
                   li

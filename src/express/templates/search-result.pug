@@ -31,19 +31,20 @@ block content
                         |  ₽
                     .ticket-card__desc
                       p #{result.description}
-          .tickets-list__pagination
-                ul.pagination
-                  li
-                    a(href=`/search?search=${search}&page=1`) <<
-                  li
-                    a(href=`/search?search=${search}&page=${page === 1 ? 1 : page - 1}`) <
-                  each pageNumber of pageList
+          if pageList.length > 1 && results.length !== 0
+            .tickets-list__pagination
+                  ul.pagination
                     li
-                      a(href=`/search?search=${search}&page=${pageNumber}`, class={active: page === pageNumber}) #{pageNumber}
-                  li
-                    a(href=`/search?search=${search}&page=${page === maxPage ? maxPage : page + 1}`) >
-                  li
-                    a(href=`/search?search=${search}&page=${maxPage}`) >>
+                      a(href=`/search?search=${search}&page=1`) <<
+                    li
+                      a(href=`/search?search=${search}&page=${page === 1 ? 1 : page - 1}`) <
+                    each pageNumber of pageList
+                      li
+                        a(href=`/search?search=${search}&page=${pageNumber}`, class={active: page === pageNumber}, style=`${page === pageNumber ? "pointer-events: none" : ""}`) #{pageNumber}
+                    li
+                      a(href=`/search?search=${search}&page=${page === maxPage ? maxPage : page + 1}`) >
+                    li
+                      a(href=`/search?search=${search}&page=${maxPage}`) >>
     section.tickets-list
       h2.visually-hidden Самые новые предложения
       .tickets-list__wrapper
