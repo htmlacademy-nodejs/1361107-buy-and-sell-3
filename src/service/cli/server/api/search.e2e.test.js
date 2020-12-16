@@ -27,7 +27,7 @@ describe(`/search route works correct:`, () => {
     beforeAll(async () => {
       await initAndFillMockDb();
       response = await request(app).get(`/search`).query({
-        query: `Куплю антиквариат`,
+        search: `Куплю антиквариат`,
       });
     });
 
@@ -36,12 +36,12 @@ describe(`/search route works correct:`, () => {
     });
 
     test(`founds correct amount of offers`, () => {
-      expect(response.body.length).toBe(2);
+      expect(response.body.offers.length).toBe(2);
     });
 
     test(`founds offers with correct id`, () => {
-      expect(response.body[0].id).toBe(2);
-      expect(response.body[1].id).toBe(3);
+      expect(response.body.offers[0].id).toBe(2);
+      expect(response.body.offers[1].id).toBe(3);
     });
   });
 
@@ -52,7 +52,7 @@ describe(`/search route works correct:`, () => {
 
     test(`returns code 404 if nothing was found`, async () => {
       const response = await request(app).get(`/search`).query({
-        query: `Куплю детские лыжи`,
+        search: `Куплю детские лыжи`,
       });
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
     });

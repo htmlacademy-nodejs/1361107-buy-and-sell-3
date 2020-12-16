@@ -10,21 +10,22 @@ module.exports = (app, service) => {
   route.get(
       `/`,
       catchAsync(async (req, res, next) => {
-        const {query} = req.query;
+        let {search, page} = req.query;
+        page = page ? +page : 1;
 
-        if (!query) {
+        if (!search) {
           return next(
               new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST)
           );
         }
 
-        const searchResult = await service.findAll(query);
-        if (searchResult.length === 0) {
+        const result = await service.findAll(search, page);
+        if (result.offers.length === 0) {
           return res
           .status(HttpCode.NOT_FOUND)
           .send(ResponseMessage.DATA_NOT_FOUND);
         }
-        return res.status(HttpCode.OK).json(searchResult);
+        return res.status(HttpCode.OK).json(result);
       })
   );
 

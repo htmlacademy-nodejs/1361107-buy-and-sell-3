@@ -16,16 +16,16 @@ class API {
     return response.data;
   }
 
-  async getOffers() {
-    return this._load(`/offers`);
+  async getOffers(page) {
+    return this._load(`/offers`, {params: {page}});
   }
 
   async getOffer(id) {
     return this._load(`/offers/${id}`);
   }
 
-  async search(query) {
-    return this._load(`/search`, {params: {query}});
+  async search(search, page) {
+    return this._load(`/search`, {params: {search, page}});
   }
 
   async getCategories() {

@@ -49,10 +49,10 @@ describe(`/offers route works correctly:`, () => {
       expect(response.statusCode).toBe(HttpCode.OK));
 
     test(`returns list with correct length`, () =>
-      expect(response.body.length).toBe(5));
+      expect(response.body.rows.length).toBe(5));
 
     test(`returns list where second offer's id is correct`, () =>
-      expect(response.body[1].id).toBe(2));
+      expect(response.body.rows[1].id).toBe(2));
   });
 
   describe(`/offers/:offerId GET request`, () => {
@@ -90,7 +90,7 @@ describe(`/offers route works correctly:`, () => {
 
     test(`creates new offer`, async () => {
       const responseAfterIncrease = await request(app).get(`/offers`);
-      expect(responseAfterIncrease.body.length).toBe(6);
+      expect(responseAfterIncrease.body.rows.length).toBe(6);
     });
   });
 

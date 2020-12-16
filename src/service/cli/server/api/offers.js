@@ -14,21 +14,18 @@ module.exports = (app, offersService, commentsService) => {
   route.get(
       `/`,
       catchAsync(async (req, res) => {
-        const offers = await offersService.findAll();
+        const page = +req.query.page || 1;
+        const result = await offersService.findAll(page);
 
-        return res.status(HttpCode.OK).json(offers);
+        return res.status(HttpCode.OK).json(result);
       })
   );
 
-  route.get(
-      `/:offerId`,
-      offerExists(offersService),
-      catchAsync(async (req, res) => {
-        const {offer} = res.locals;
+  route.get(`/:offerId`, offerExists(offersService), (req, res) => {
+    const {offer} = res.locals;
 
-        return res.status(HttpCode.OK).json(offer);
-      })
-  );
+    return res.status(HttpCode.OK).json(offer);
+  });
 
   route.post(
       `/`,

@@ -43,16 +43,14 @@ module.exports = {
   run: async (args) => {
     const port = Number.parseInt(args[0], 10) || config.API_PORT;
 
-    await (async () => {
-      try {
-        logger.info(`Establishing database connection...`);
-        await sequelize.authenticate();
-        logger.info(`Database connection established`);
-      } catch (err) {
-        logger.error(`Failed to connect to database: ${err.message}`);
-        process.exit(ExitCode.ERROR);
-      }
-    })();
+    try {
+      logger.info(`Establishing database connection...`);
+      await sequelize.authenticate();
+      logger.info(`Database connection established`);
+    } catch (err) {
+      logger.error(`Failed to connect to database: ${err.message}`);
+      process.exit(ExitCode.ERROR);
+    }
 
     app.listen(port, (err) => {
       if (err) {
