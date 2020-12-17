@@ -128,3 +128,46 @@ exports.getPageList = (page, maxPage) => {
   pageList = [page - 2, page - 1, page, page + 1, page + 2];
   return pageList;
 };
+
+exports.getSequelizeQueryOptions = (model, db) => {
+  const options = {
+    Offer: {
+      attributes: {exclude: [`userId`, `typeId`]},
+      include: [
+        {
+          model: db.User,
+          as: `owner`,
+          attributes: [`id`, `firstName`, `lastName`, `email`],
+        },
+        {model: db.OfferType, as: `offerType`},
+        {
+          model: db.Comment,
+          as: `comments`,
+          attributes: {exclude: [`userId`, `offerId`]},
+          include: {
+            model: db.User,
+            as: `user`,
+            attributes: [`id`, `firstName`, `lastName`, `email`],
+          },
+        },
+        {
+          model: db.Category,
+          as: `categories`,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    },
+    Comment: {
+      attributes: {exclude: [`userId`]},
+      include: {
+        model: db.User,
+        as: `user`,
+        attributes: [`id`, `firstName`, `lastName`, `email`],
+      },
+    }
+  };
+
+  return options[model];
+};

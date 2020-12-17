@@ -14,7 +14,7 @@ module.exports = (app, offersService, commentsService) => {
   route.get(
       `/`,
       catchAsync(async (req, res) => {
-        const page = +req.query.page || 1;
+        const page = Number(req.query.page) || 1;
         const result = await offersService.findAll(page);
 
         return res.status(HttpCode.OK).json(result);

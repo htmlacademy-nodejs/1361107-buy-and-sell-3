@@ -1,9 +1,7 @@
 "use strict";
 
-const {
-  getSequelizeQueryOptions,
-  PAGINATION_OFFSET,
-} = require(`../../../../constants`);
+const {PAGINATION_OFFSET} = require(`../../../../constants`);
+const {getSequelizeQueryOptions} = require(`../../../../utils`);
 
 class SearchService {
   constructor(db) {

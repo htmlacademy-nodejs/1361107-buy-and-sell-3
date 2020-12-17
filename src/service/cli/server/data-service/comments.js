@@ -1,6 +1,6 @@
 "use strict";
 
-const {getSequelizeQueryOptions} = require(`../../../../constants`);
+const {getSequelizeQueryOptions} = require(`../../../../utils`);
 
 class CommentsService {
   constructor(db) {
