@@ -3,10 +3,11 @@
 const {Router} = require(`express`);
 const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 const offerExists = require(`../middleware/offer-exists`);
-const newOfferValidator = require(`../middleware/new-offer-validator`);
 const commentValidator = require(`../middleware/comment-validator`);
 const updateOfferValidator = require(`../middleware/update-offer-validator`);
 const {catchAsync, AppError} = require(`../../../../utils`);
+const schemaValidator = require(`../middleware/schema-validator`);
+const newOfferSchema = require(`../schemas/new-offer`);
 
 module.exports = (app, offersService, commentsService) => {
   const route = new Router();
@@ -29,7 +30,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.post(
       `/`,
-      newOfferValidator,
+      schemaValidator(newOfferSchema),
       catchAsync(async (req, res) => {
         const newOffer = await offersService.create(req.body);
 

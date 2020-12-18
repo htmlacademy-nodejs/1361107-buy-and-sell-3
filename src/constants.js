@@ -105,3 +105,14 @@ exports.DBErrorName = {
   DATABASE_ERROR: `SequelizeDatabaseError`,
   VALIDATION_ERROR: `SequelizeValidationError`
 };
+
+exports.NewOfferMessage = {
+  MIN_TITLE_LENGTH: `Заголовок должен быть не меньше 10 символов`,
+  MAX_TITLE_LENGTH: `Заголовок должен быть не больше 100 символов`,
+  MIN_DESCRIPTION_LENGTH: `Описание должно быть не меньше 50 символов`,
+  MAX_DESCRIPTION_LENGTH: `Описание должно быть не больше 1000 символов`,
+  MIN_COST_NUMBER: `Стоимость должна быть не меньше 100`,
+  REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
+  WRONG_TYPE_ID: `Неверный id типа объявления`,
+  WRONG_CATEGORY: `Категория должна быть типа число`
+};
