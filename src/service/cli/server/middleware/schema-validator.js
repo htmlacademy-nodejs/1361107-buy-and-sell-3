@@ -11,7 +11,7 @@ module.exports = (schema) => async (req, res, next) => {
     const {details} = err;
 
     console.log(details);
-    next(new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST));
+    next(new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST, details));
   }
 
   next();

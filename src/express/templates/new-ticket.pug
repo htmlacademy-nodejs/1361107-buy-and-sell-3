@@ -21,22 +21,28 @@ block content
                 .form__field
                   input#ticket-name.js-field(type='text', name='title', required='', value=prevOfferData ? prevOfferData.title : '')
                   label(for='title') Название
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'title')
+                      span(style={display: 'block', color: 'red'}) - #{error.message}
               .ticket-form__row
                 .form__field
                   textarea#comment-field.js-field(name='description', cols='30', rows='10', maxlength='400', minlength='50', required='')
                     | #{prevOfferData ? prevOfferData.description : ''}
                   label(for='description') Описание
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'description')
+                      span(style={display: 'block', color: 'red'}) #{error.message}
               .ticket-form__row
                 select#category-field.form__select.js-multiple-select(name='category', data-label='Выбрать категорию публикации', multiple='', required='')
                   each category in categories
-                    option(value=`${category.id}`, selected=prevOfferData ? prevOfferData.category.includes(category.id) : false) #{category.name}
+                    option(value=`${category.id}`, selected=prevOfferData ? prevOfferData.category.includes(String(category.id)) : false) #{category.name}
               .ticket-form__row
                 .form__field.form__field--price
                   input#price-field.js-field.js-price(type='number', name='cost', min='1', required='', value=prevOfferData ? prevOfferData.cost : '')
                   label(for='cost') Цена
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'cost')
+                      span(style={display: 'block', color: 'red'}) #{error.message}
                 .form__switch.switch
                   .switch__item
                     input#buy-field.visually-hidden(type='radio', name='typeId', value=1, checked=prevOfferData && prevOfferData.typeId === '1', required='') 

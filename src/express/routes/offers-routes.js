@@ -5,7 +5,7 @@ const api = require(`../api`).getAPI();
 const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
-const {buildQueryString, catchAsync} = require(`../../utils`);
+const {catchAsync} = require(`../../utils`);
 
 const UPLOAD_DIR = `../upload/img/`;
 
@@ -71,7 +71,13 @@ offersRouter.post(
         await api.createOffer(offerData);
         res.redirect(`/my`);
       } catch (error) {
-        res.redirect(`/offers/add${buildQueryString(offerData)}`);
+        const {details} = error.response.data.error;
+        const categories = await api.getCategories();
+        res.render(`new-ticket`, {
+          categories,
+          prevOfferData: offerData,
+          errorDetails: details
+        });
       }
     })
 );
