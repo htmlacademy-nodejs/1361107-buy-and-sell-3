@@ -5,7 +5,7 @@ const api = require(`../api`).getAPI();
 const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
-const {catchAsync} = require(`../../utils`);
+const {catchAsync, formatDate} = require(`../../utils`);
 
 const UPLOAD_DIR = `../upload/img/`;
 
@@ -48,7 +48,14 @@ offersRouter.get(
     })
 );
 
-offersRouter.get(`/:id`, (req, res) => res.render(`ticket`));
+offersRouter.get(
+    `/:id`,
+    catchAsync(async (req, res) => {
+      const {id} = req.params;
+      const itemOffer = await api.getOffer(id);
+      res.render(`ticket`, {itemOffer, formatDate});
+    })
+);
 
 offersRouter.post(
     `/add`,
@@ -76,7 +83,7 @@ offersRouter.post(
         res.render(`new-ticket`, {
           categories,
           prevOfferData: offerData,
-          errorDetails: details
+          errorDetails: details,
         });
       }
     })
