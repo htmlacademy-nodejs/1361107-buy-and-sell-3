@@ -3,11 +3,11 @@
 const {Router} = require(`express`);
 const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 const offerExists = require(`../middleware/offer-exists`);
-const updateOfferValidator = require(`../middleware/update-offer-validator`);
 const {catchAsync, AppError} = require(`../../../../utils`);
 const schemaValidator = require(`../middleware/schema-validator`);
 const newOfferSchema = require(`../schemas/new-offer`);
 const newCommentSchema = require(`../schemas/new-comment`);
+const updateOfferSchema = require(`../schemas/update-offer`);
 
 module.exports = (app, offersService, commentsService) => {
   const route = new Router();
@@ -40,7 +40,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.put(
       `/:offerId`,
-      [offerExists(offersService), updateOfferValidator],
+      [offerExists(offersService), schemaValidator(updateOfferSchema)],
       catchAsync(async (req, res) => {
         const {offerId} = req.params;
 
