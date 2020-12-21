@@ -58,6 +58,31 @@ offersRouter.get(
 );
 
 offersRouter.post(
+    `/:id/comments`,
+    catchAsync(async (req, res) => {
+      const {id} = req.params;
+      const {body} = req;
+      const commentData = {
+        userId: 1,
+        text: body.text,
+      };
+      try {
+        await api.createComment(id, commentData);
+        res.redirect(`/offers/${id}`);
+      } catch (error) {
+        const {details: errorDetails} = error.response.data.error;
+        const itemOffer = await api.getOffer(id);
+        res.render(`ticket`, {
+          itemOffer,
+          formatDate,
+          prevCommentData: {text: commentData.text},
+          errorDetails,
+        });
+      }
+    })
+);
+
+offersRouter.post(
     `/add`,
     upload.single(`picture`),
     catchAsync(async (req, res) => {

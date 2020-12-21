@@ -21,6 +21,7 @@ const app = express();
 
 app.use(express.static(path.resolve(__dirname, DirPath.PUBLIC)));
 app.use(express.static(path.resolve(__dirname, DirPath.UPDATE)));
+app.use(express.urlencoded({extended: false}));
 app.set(`views`, path.resolve(__dirname, DirPath.TEMPLATES));
 app.set(`view engine`, `pug`);
 

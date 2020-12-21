@@ -42,6 +42,13 @@ class API {
       data,
     });
   }
+
+  async createComment(offerId, data) {
+    return this._load(`/offers/${offerId}/comments`, {
+      method: `POST`,
+      data
+    });
+  }
 }
 
 const TIMEOUT = 2000;
