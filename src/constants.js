@@ -116,3 +116,9 @@ exports.NewOfferMessage = {
   WRONG_TYPE_ID: `Неверный id типа объявления`,
   WRONG_CATEGORY: `Категория должна быть типа число`
 };
+
+exports.NewCommentMessage = {
+  MIN_TEXT_LENGTH: `Текст комментария должен быть не меньше 20 символов`,
+  MAX_TEXT_LENGTH: `Текст комментария должен быть не больше 200 символов`,
+  REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
+};
