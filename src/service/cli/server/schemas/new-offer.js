@@ -39,7 +39,7 @@ module.exports = Joi.object({
     .label(`ID пользователя`)
     .required()
     .messages({"any.required": NewOfferMessage.REQUIRED_FIELD}),
-  category: Joi.array()
+  categories: Joi.array()
     .label(`Категории`)
     .items(Joi.number())
     .required()

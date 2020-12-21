@@ -27,7 +27,7 @@ class OffersService {
   async create(offerData) {
     const newOffer = await this._db.Offer.create(offerData);
 
-    await newOffer.addCategories(offerData.category);
+    await newOffer.addCategories(offerData.categories);
 
     return newOffer;
   }
@@ -40,9 +40,9 @@ class OffersService {
       returning: true,
     });
 
-    if (offerData.category) {
+    if (offerData.categories) {
       const offer = await this._db.Offer.findByPk(id);
-      await offer.setCategories(offerData.category);
+      await offer.setCategories(offerData.categories);
       return offer;
     }
 

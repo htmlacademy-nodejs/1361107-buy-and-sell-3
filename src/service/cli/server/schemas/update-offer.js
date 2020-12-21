@@ -16,7 +16,15 @@ module.exports = Joi.object({
     "number.min": NewOfferMessage.MIN_COST_NUMBER,
   }),
   picture: Joi.string().label(`Фото`),
-  category: Joi.array().label(`Категории`).items(Joi.number()).messages({
+  categories: Joi.array().label(`Категории`).items(Joi.number()).messages({
     "number.base": NewOfferMessage.WRONG_CATEGORY,
   }),
+  typeId: Joi.number()
+    .label(`Тип объявления`)
+    .valid(...[1, 2])
+    .required()
+    .messages({
+      "any.required": NewOfferMessage.REQUIRED_FIELD,
+      "any.only": NewOfferMessage.WRONG_TYPE_ID,
+    }),
 });

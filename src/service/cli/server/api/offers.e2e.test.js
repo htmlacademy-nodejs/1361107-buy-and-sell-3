@@ -29,7 +29,7 @@ describe(`/offers route works correctly:`, () => {
     description: `Если найдёте дешевле — сброшу цену. Бонусом отдам все аксессуары.`,
     cost: 100000,
     picture: `item.jpg`,
-    category: [1],
+    categories: [1],
   };
 
   const mockNewComment = {text: `Новый комментарий!`, userId: 1};

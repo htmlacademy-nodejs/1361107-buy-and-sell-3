@@ -33,9 +33,9 @@ block content
                     each error in errorDetails.filter((el) => el.context.key === 'description')
                       span(style={display: 'block', color: 'red'}) #{error.message}
               .ticket-form__row
-                select#category-field.form__select.js-multiple-select(name='category', data-label='Выбрать категорию публикации', multiple='', required='')
+                select#category-field.form__select.js-multiple-select(name='categories', data-label='Выбрать категорию публикации', multiple='', required='')
                   each category in categories
-                    option(value=`${category.id}`, selected=prevOfferData ? prevOfferData.category.includes(String(category.id)) : false) #{category.name}
+                    option(value=`${category.id}`, selected=prevOfferData ? prevOfferData.categories.includes(String(category.id)) : false) #{category.name}
               .ticket-form__row
                 .form__field.form__field--price
                   input#price-field.js-field.js-price(type='number', name='cost', min='1', required='', value=prevOfferData ? prevOfferData.cost : '')

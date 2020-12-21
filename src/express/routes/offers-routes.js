@@ -48,6 +48,52 @@ offersRouter.get(
     })
 );
 
+offersRouter.post(
+    `/edit/:id`,
+    upload.single(`picture`),
+    catchAsync(async (req, res) => {
+      const {id} = req.params;
+      const {body, file} = req;
+      const offerData = {
+        title: body.title,
+        description: body.description,
+        typeId: body.typeId,
+        cost: body.cost,
+        categories: body.categories,
+      };
+      console.log(body.categories);
+      if (typeof offerData.categories === `string`) {
+        offerData.categories = [offerData.categories];
+      }
+      if (body.loadedPicture) {
+        offerData.picture = body.loadedPicture;
+      }
+      if (file) {
+        offerData.picture = file.filename;
+      }
+      try {
+        await api.updateOffer(id, offerData);
+        res.redirect(`/offers/${id}`);
+      } catch (error) {
+        const {details: errorDetails} = error.response.data.error;
+        const [offer, categories] = await Promise.all([
+          api.getOffer(id),
+          api.getCategories(),
+        ]);
+        res.render(`ticket-edit`, {
+          offer: {
+            ...offer,
+            ...offerData,
+            picture: offerData.picture || offer.picture,
+            loadedPicture: file ? file.filename : null,
+          },
+          categories,
+          errorDetails,
+        });
+      }
+    })
+);
+
 offersRouter.get(
     `/:id`,
     catchAsync(async (req, res) => {
@@ -93,11 +139,11 @@ offersRouter.post(
         typeId: body.typeId,
         cost: body.cost,
         picture: file ? file.filename : `item01.jpg`,
-        category: body.category,
+        categories: body.categories,
         userId: 1,
       };
-      if (typeof offerData.category === `string`) {
-        offerData.category = [offerData.category];
+      if (typeof offerData.categories === `string`) {
+        offerData.categories = [offerData.categories];
       }
       try {
         await api.createOffer(offerData);

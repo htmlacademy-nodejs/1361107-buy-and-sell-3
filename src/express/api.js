@@ -49,6 +49,13 @@ class API {
       data
     });
   }
+
+  async updateOffer(offerId, data) {
+    return this._load(`/offers/${offerId}`, {
+      method: `PUT`,
+      data
+    });
+  }
 }
 
 const TIMEOUT = 2000;
