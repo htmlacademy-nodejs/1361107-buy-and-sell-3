@@ -3,9 +3,9 @@
 const {ResponseMessage, HttpCode} = require(`../../constants`);
 
 module.exports = (req, res, next) => {
-  const {offerId} = req.params;
+  const {id} = req.params;
 
-  if (isNaN(Number(offerId))) {
+  if (isNaN(Number(id))) {
     return res
       .status(HttpCode.BAD_REQUEST)
       .render(`errors/400`, {
