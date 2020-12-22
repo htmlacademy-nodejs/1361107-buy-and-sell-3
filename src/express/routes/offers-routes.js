@@ -6,6 +6,7 @@ const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const {catchAsync, formatDate} = require(`../../utils`);
+const idValidator = require(`../middleware/id-validator`);
 
 const UPLOAD_DIR = `../upload/img/`;
 
@@ -23,7 +24,7 @@ const upload = multer({storage});
 
 const offersRouter = new Router();
 
-offersRouter.get(`/category/:id`, (req, res) => res.render(`category`));
+offersRouter.get(`/category/:id`, idValidator, (req, res) => res.render(`category`));
 
 offersRouter.get(
     `/add`,
@@ -38,6 +39,7 @@ offersRouter.get(
 
 offersRouter.get(
     `/edit/:id`,
+    idValidator,
     catchAsync(async (req, res) => {
       const {id} = req.params;
       const [offer, categories] = await Promise.all([
@@ -50,6 +52,7 @@ offersRouter.get(
 
 offersRouter.post(
     `/edit/:id`,
+    idValidator,
     upload.single(`picture`),
     catchAsync(async (req, res) => {
       const {id} = req.params;
@@ -61,7 +64,6 @@ offersRouter.post(
         cost: body.cost,
         categories: body.categories,
       };
-      console.log(body.categories);
       if (typeof offerData.categories === `string`) {
         offerData.categories = [offerData.categories];
       }
@@ -96,6 +98,7 @@ offersRouter.post(
 
 offersRouter.get(
     `/:id`,
+    idValidator,
     catchAsync(async (req, res) => {
       const {id} = req.params;
       const itemOffer = await api.getOffer(id);
@@ -105,6 +108,7 @@ offersRouter.get(
 
 offersRouter.post(
     `/:id/comments`,
+    idValidator,
     catchAsync(async (req, res) => {
       const {id} = req.params;
       const {body} = req;
