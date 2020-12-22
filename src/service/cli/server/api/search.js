@@ -11,7 +11,7 @@ module.exports = (app, service) => {
       `/`,
       catchAsync(async (req, res, next) => {
         let {search, page} = req.query;
-        page = page ? +page : 1;
+        page = page ? Number(page) : 1;
 
         if (!search) {
           return next(

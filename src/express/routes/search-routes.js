@@ -11,7 +11,7 @@ searchRouter.get(
     `/`,
     catchAsync(async (req, res) => {
       let {page, search} = req.query;
-      page = +page || 1;
+      page = Number(page) || 1;
       try {
         const {count, offers: results} = await api.search(search, page);
 
