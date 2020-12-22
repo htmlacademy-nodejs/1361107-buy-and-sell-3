@@ -5,8 +5,14 @@ const api = require(`../api`).getAPI();
 const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
-const {catchAsync, formatDate} = require(`../../utils`);
+const {
+  catchAsync,
+  formatDate,
+  getPageList,
+  getCardColor,
+} = require(`../../utils`);
 const idValidator = require(`../middleware/id-validator`);
+const {PAGINATION_OFFSET} = require(`../../constants`);
 
 const UPLOAD_DIR = `../upload/img/`;
 
@@ -24,7 +30,32 @@ const upload = multer({storage});
 
 const offersRouter = new Router();
 
-offersRouter.get(`/category/:id`, idValidator, (req, res) => res.render(`category`));
+offersRouter.get(
+    `/category/:id`,
+    idValidator,
+    catchAsync(async (req, res) => {
+      const page = Number(req.query.page) || 1;
+      const {id} = req.params;
+      const {count, offers: listOffers} = await api.getOffersByCategory(
+          page,
+          id
+      );
+      const category = await api.getCategory(id);
+      listOffers.forEach((offer) => {
+        offer.cardColor = getCardColor();
+      });
+      const maxPage = Math.ceil(count / PAGINATION_OFFSET);
+      const pageList = getPageList(page, maxPage);
+      return res.render(`category`, {
+        page,
+        maxPage,
+        pageList,
+        listOffers,
+        category,
+        count
+      });
+    })
+);
 
 offersRouter.get(
     `/add`,

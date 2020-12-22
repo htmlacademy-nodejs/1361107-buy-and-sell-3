@@ -17,6 +17,28 @@ class OffersService {
     });
   }
 
+  async findByCategory(page, categoryId) {
+    const {count, rows} = await this._db.OfferCategories.findAndCountAll({
+      where: {
+        categoryId,
+      },
+      attributes: [`offerId`],
+      limit: PAGINATION_OFFSET,
+      offset: PAGINATION_OFFSET * (page - 1),
+    });
+
+    const idList = rows.map((el) => el.offerId);
+
+    const offers = await this._db.Offer.findAll({
+      ...getSequelizeQueryOptions(`Offer`, this._db),
+      where: {
+        id: idList
+      }
+    });
+
+    return {count, offers};
+  }
+
   async findOne(id) {
     return await this._db.Offer.findByPk(
         id,

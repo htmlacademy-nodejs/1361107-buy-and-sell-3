@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     timestamps: true,
-    paranoid: true,
+    paranoid: false,
   });
 
   return Offer;

@@ -6,9 +6,11 @@ class CategoryService {
   }
 
   async findAll() {
-    const categories = await this._db.Category.findAll();
+    return await this._db.Category.findAll();
+  }
 
-    return categories;
+  async findOne(id) {
+    return await this._db.Category.findByPk(id);
   }
 }
 

@@ -20,12 +20,20 @@ class API {
     return this._load(`/offers`, {params: {page}});
   }
 
+  async getOffersByCategory(page, categoryId) {
+    return this._load(`/offers/category/${categoryId}`, {params: {page}});
+  }
+
   async getOffer(id) {
     return this._load(`/offers/${id}`);
   }
 
   async search(search, page) {
     return this._load(`/search`, {params: {search, page}});
+  }
+
+  async getCategory(id) {
+    return this._load(`/categories/${id}`);
   }
 
   async getCategories() {

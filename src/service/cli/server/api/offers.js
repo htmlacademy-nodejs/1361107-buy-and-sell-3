@@ -23,6 +23,17 @@ module.exports = (app, offersService, commentsService) => {
       })
   );
 
+  route.get(
+      `/category/:categoryId`,
+      catchAsync(async (req, res) => {
+        const {categoryId} = req.params;
+        const page = Number(req.query.page) || 1;
+        const result = await offersService.findByCategory(page, categoryId);
+
+        return res.status(HttpCode.OK).json(result);
+      })
+  );
+
   route.get(`/:offerId`, [idValidator, offerExists(offersService)], (req, res) => {
     const {offer} = res.locals;
 

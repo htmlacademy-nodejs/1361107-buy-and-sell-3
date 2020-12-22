@@ -14,10 +14,7 @@ exports.getRandomInt = getRandomInt;
 exports.shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const randomPosition = Math.floor(Math.random() * i);
-    [array[i], array[randomPosition]] = [
-      array[randomPosition],
-      array[i],
-    ];
+    [array[i], array[randomPosition]] = [array[randomPosition], array[i]];
   }
   return array;
 };
@@ -114,8 +111,8 @@ exports.getPageList = (page, maxPage) => {
   let pageList = [];
   if (maxPage <= 5) {
     pageList = Array(maxPage)
-    .fill({}, 0, maxPage)
-    .map((el, i) => i + 1);
+      .fill({}, 0, maxPage)
+      .map((el, i) => i + 1);
     return pageList;
   }
 
@@ -158,7 +155,7 @@ exports.getSequelizeQueryOptions = (model, db) => {
           as: `categories`,
           through: {
             attributes: [],
-          },
+          }
         },
       ],
     },
@@ -169,7 +166,7 @@ exports.getSequelizeQueryOptions = (model, db) => {
         as: `user`,
         attributes: [`id`, `firstName`, `lastName`, `email`],
       },
-    }
+    },
   };
 
   return options[model];
@@ -180,10 +177,12 @@ exports.formatDate = (date) => {
     date = new Date(date);
   }
   const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-  const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  const month =
+    date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
   const year = date.getFullYear();
   const hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
-  const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+  const minutes =
+    date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
 
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
