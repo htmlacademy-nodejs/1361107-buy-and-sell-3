@@ -12,7 +12,8 @@
     "start-rest-server": "cross-env LOG_LEVEL=debug NODE_ENV=development nodemon ./src/service/service.js --server",
     "start-front-server": "cross-env NODE_ENV=development nodemon ./src/express/index.js",
     "init-db": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/cli/server/db/init-db.js",
-    "fill-db": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/service.js --fill-db 20"
+    "fill-db": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/service.js --fill-db 20",
+    "init-and-fill-db": "npm run init-db && npm run fill-db"
   },
   "repository": {
     "type": "git",
