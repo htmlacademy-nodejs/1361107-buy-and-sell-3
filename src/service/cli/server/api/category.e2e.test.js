@@ -39,7 +39,7 @@ describe(`/categories route works correctly:`, () => {
 
     test(`returns correct list of categories`, () => {
       expect(response.body).toEqual(
-          expect.arrayContaining([{"id": 1, "name": `Книги`}, {"id": 2, "name": `Разное`}])
+          expect.arrayContaining([{"id": 1, "name": `Книги`, "offerCount": `5`}, {"id": 2, "name": `Разное`, "offerCount": `5`}])
       );
     });
   });

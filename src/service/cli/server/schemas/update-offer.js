@@ -22,7 +22,6 @@ module.exports = Joi.object({
   typeId: Joi.number()
     .label(`Тип объявления`)
     .valid(...[1, 2])
-    .required()
     .messages({
       "any.required": NewOfferMessage.REQUIRED_FIELD,
       "any.only": NewOfferMessage.WRONG_TYPE_ID,

@@ -32,7 +32,13 @@ describe(`/offers route works correctly:`, () => {
     categories: [1],
   };
 
-  const mockNewComment = {text: `Новый комментарий!`, userId: 1};
+  const updateOfferData = {
+    description: `Если найдёте дешевле — сброшу цену. Бонусом отдам все аксессуары.`,
+    cost: 100000,
+    picture: `item.jpg`,
+  };
+
+  const mockNewComment = {text: `Новый комментарий, очень крутой комментарий!`, userId: 1};
 
   describe(`/offers GET request`, () => {
     let response;
@@ -50,9 +56,6 @@ describe(`/offers route works correctly:`, () => {
 
     test(`returns list with correct length`, () =>
       expect(response.body.rows.length).toBe(5));
-
-    test(`returns list where second offer's id is correct`, () =>
-      expect(response.body.rows[1].id).toBe(2));
   });
 
   describe(`/offers/:offerId GET request`, () => {
@@ -70,7 +73,9 @@ describe(`/offers route works correctly:`, () => {
       expect(response.statusCode).toBe(HttpCode.OK));
 
     test(`returns correct offer`, () => {
-      expect(response.body.title).toBe(`Отдам в хорошие руки подшивку «Мурзилка».`);
+      expect(response.body.title).toBe(
+          `Отдам в хорошие руки подшивку «Мурзилка».`
+      );
       expect(response.body.description).toBe(
           `Если товар не понравится — верну всё до последней копейки.`
       );
@@ -114,7 +119,7 @@ describe(`/offers route works correctly:`, () => {
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).put(`/offers/1`).send(mockNewOffer);
+      response = await request(app).put(`/offers/1`).send(updateOfferData);
     });
 
     test(`returns 200 status code`, () =>
@@ -122,7 +127,7 @@ describe(`/offers route works correctly:`, () => {
 
     test(`changes offer in the list`, async () => {
       const responceAfterChanges = await request(app).get(`/offers/1`);
-      expect(responceAfterChanges.body.title).toBe(`Куплю антиквариат.`);
+      expect(responceAfterChanges.body.description).toBe(`Если найдёте дешевле — сброшу цену. Бонусом отдам все аксессуары.`);
     });
   });
 
@@ -134,15 +139,13 @@ describe(`/offers route works correctly:`, () => {
     });
 
     test(`returns 404 status code if offer id was not found`, async () => {
-      response = await request(app)
-        .put(`/offers/999`)
-        .send(mockNewOffer);
+      response = await request(app).put(`/offers/999`).send(updateOfferData);
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
     });
 
     test(`returns 400 status code if data is invalid`, async () => {
-      for (const key of Object.keys(mockNewOffer)) {
-        const badOffer = {...mockNewOffer};
+      for (const key of Object.keys(updateOfferData)) {
+        const badOffer = {...updateOfferData};
         delete badOffer[key];
         const badResponse = await request(app)
           .put(`/offers/QWEfOZ`)
@@ -215,7 +218,7 @@ describe(`/offers route works correctly:`, () => {
           `/offers/1/comments`
       );
 
-      expect(responseAfterCreation.body[2].text).toBe(`Новый комментарий!`);
+      expect(responseAfterCreation.body[2].text).toBe(`Новый комментарий, очень крутой комментарий!`);
     });
   });
 
@@ -268,9 +271,7 @@ describe(`/offers route works correctly:`, () => {
     });
 
     test(`returns 404 status code if an offer does not exist`, async () => {
-      response = await request(app).delete(
-          `/offers/999/comments/1`
-      );
+      response = await request(app).delete(`/offers/999/comments/1`);
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
     });
 
