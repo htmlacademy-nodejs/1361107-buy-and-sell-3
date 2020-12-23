@@ -40,6 +40,7 @@ offersRouter.get(
           page,
           id
       );
+      const categories = await api.getCategories();
       const category = await api.getCategory(id);
       listOffers.forEach((offer) => {
         offer.cardColor = getCardColor();
@@ -52,7 +53,8 @@ offersRouter.get(
         pageList,
         listOffers,
         category,
-        count
+        count,
+        categories
       });
     })
 );

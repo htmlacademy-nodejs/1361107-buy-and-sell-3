@@ -74,6 +74,20 @@ Offer.belongsToMany(Category, {
   foreignKey: `offerId`,
   otherKey: `categoryId`,
 });
+Category.hasMany(OfferCategories, {
+  foreignKey: `categoryId`
+});
+OfferCategories.belongsTo(Category, {
+  foreignKey: `categoryId`,
+  as: `category`
+});
+Offer.hasMany(OfferCategories, {
+  foreignKey: `offerId`
+});
+OfferCategories.belongsTo(Offer, {
+  foreignKey: `offerId`,
+  as: `offer`
+});
 
 const initDb = async () => {
   await sequelize.sync({force: true});

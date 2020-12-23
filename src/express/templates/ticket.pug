@@ -30,7 +30,7 @@ block content
             ul.ticket__tags
               each category in itemOffer.categories
                 li
-                  a.category-tile.category-tile--small(href='#')
+                  a.category-tile.category-tile--small(href=`/offers/category/${category.id}`)
                     span.category-tile__image
                       img(src=`/img/cat${category.id}.jpg`, srcset=`/img/cat-${category.id}@2x.jpg 2x`, alt='Иконка категории')
                     span.category-tile__label #{category.name}
