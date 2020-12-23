@@ -25,6 +25,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.get(
       `/category/:categoryId`,
+      idValidator,
       catchAsync(async (req, res) => {
         const {categoryId} = req.params;
         const page = Number(req.query.page) || 1;
