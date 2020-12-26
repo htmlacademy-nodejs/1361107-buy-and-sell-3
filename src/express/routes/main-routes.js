@@ -10,14 +10,21 @@ const mainRouter = new Router();
 mainRouter.get(
     `/`,
     catchAsync(async (req, res) => {
-      const page = +req.query.page || 1;
+      const page = Number(req.query.page) || 1;
       const {count, rows: listOffers} = await api.getOffers(page);
+      const categories = await api.getCategories();
       listOffers.forEach((offer) => {
         offer.cardColor = getCardColor();
       });
       const maxPage = Math.ceil(count / PAGINATION_OFFSET);
       const pageList = getPageList(page, maxPage);
-      return res.render(`main`, {page, maxPage, pageList, listOffers});
+      return res.render(`main`, {
+        page,
+        maxPage,
+        pageList,
+        listOffers,
+        categories,
+      });
     })
 );
 

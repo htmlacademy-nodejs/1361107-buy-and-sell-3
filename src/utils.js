@@ -14,10 +14,7 @@ exports.getRandomInt = getRandomInt;
 exports.shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const randomPosition = Math.floor(Math.random() * i);
-    [array[i], array[randomPosition]] = [
-      array[randomPosition],
-      array[i],
-    ];
+    [array[i], array[randomPosition]] = [array[randomPosition], array[i]];
   }
   return array;
 };
@@ -90,10 +87,13 @@ exports.catchAsync = (fn) => {
 };
 
 class AppError extends Error {
-  constructor(message, statusCode) {
+  constructor(message, statusCode, details) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = true;
+    if (details) {
+      this.details = details;
+    }
 
     Error.captureStackTrace(this, this.constructor);
   }
@@ -111,8 +111,8 @@ exports.getPageList = (page, maxPage) => {
   let pageList = [];
   if (maxPage <= 5) {
     pageList = Array(maxPage)
-    .fill({}, 0, maxPage)
-    .map((el, i) => i + 1);
+      .fill({}, 0, maxPage)
+      .map((el, i) => i + 1);
     return pageList;
   }
 
@@ -127,4 +127,62 @@ exports.getPageList = (page, maxPage) => {
   }
   pageList = [page - 2, page - 1, page, page + 1, page + 2];
   return pageList;
+};
+
+exports.getSequelizeQueryOptions = (model, db) => {
+  const options = {
+    Offer: {
+      attributes: {exclude: [`userId`, `typeId`]},
+      include: [
+        {
+          model: db.User,
+          as: `owner`,
+          attributes: [`id`, `firstName`, `lastName`, `email`],
+        },
+        {model: db.OfferType, as: `offerType`},
+        {
+          model: db.Comment,
+          as: `comments`,
+          attributes: {exclude: [`userId`, `offerId`]},
+          include: {
+            model: db.User,
+            as: `user`,
+            attributes: [`id`, `firstName`, `lastName`, `email`],
+          },
+        },
+        {
+          model: db.Category,
+          as: `categories`,
+          through: {
+            attributes: [],
+          }
+        },
+      ],
+    },
+    Comment: {
+      attributes: {exclude: [`userId`]},
+      include: {
+        model: db.User,
+        as: `user`,
+        attributes: [`id`, `firstName`, `lastName`, `email`],
+      },
+    },
+  };
+
+  return options[model];
+};
+
+exports.formatDate = (date) => {
+  if (typeof date === `string`) {
+    date = new Date(date);
+  }
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+  const month =
+    date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+  const minutes =
+    date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+
+  return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };

@@ -25,7 +25,7 @@ const handleValidationErrorDB = (err) => {
 
 const sendErrorProd = (err, res) => {
   if (err.isOperational) {
-    res.status(err.statusCode).json({message: err.message});
+    res.status(err.statusCode).json({message: err.message, error: err});
   } else {
     res
       .status(HttpCode.INTERNAL_SERVER_ERROR)

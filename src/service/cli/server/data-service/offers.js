@@ -1,6 +1,7 @@
 "use strict";
 
-const {getSequelizeQueryOptions, PAGINATION_OFFSET} = require(`../../../../constants`);
+const {PAGINATION_OFFSET} = require(`../../../../constants`);
+const {getSequelizeQueryOptions} = require(`../../../../utils`);
 
 class OffersService {
   constructor(db) {
@@ -16,6 +17,28 @@ class OffersService {
     });
   }
 
+  async findByCategory(page, categoryId) {
+    const {count, rows} = await this._db.OfferCategories.findAndCountAll({
+      where: {
+        categoryId,
+      },
+      attributes: [`offerId`],
+      limit: PAGINATION_OFFSET,
+      offset: PAGINATION_OFFSET * (page - 1),
+    });
+
+    const idList = rows.map((el) => el.offerId);
+
+    const offers = await this._db.Offer.findAll({
+      ...getSequelizeQueryOptions(`Offer`, this._db),
+      where: {
+        id: idList
+      }
+    });
+
+    return {count, offers};
+  }
+
   async findOne(id) {
     return await this._db.Offer.findByPk(
         id,
@@ -26,7 +49,7 @@ class OffersService {
   async create(offerData) {
     const newOffer = await this._db.Offer.create(offerData);
 
-    await newOffer.addCategories(offerData.category);
+    await newOffer.addCategories(offerData.categories);
 
     return newOffer;
   }
@@ -39,9 +62,9 @@ class OffersService {
       returning: true,
     });
 
-    if (offerData.category) {
+    if (offerData.categories) {
       const offer = await this._db.Offer.findByPk(id);
-      await offer.setCategories(offerData.category);
+      await offer.setCategories(offerData.categories);
       return offer;
     }
 

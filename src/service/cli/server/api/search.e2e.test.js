@@ -1,3 +1,4 @@
+/* eslint-disable max-nested-callbacks */
 "use strict";
 
 const express = require(`express`);
@@ -40,8 +41,7 @@ describe(`/search route works correct:`, () => {
     });
 
     test(`founds offers with correct id`, () => {
-      expect(response.body.offers[0].id).toBe(2);
-      expect(response.body.offers[1].id).toBe(3);
+      expect(response.body.offers.map((offer) => offer.id)).toEqual(expect.arrayContaining([2, 3]));
     });
   });
 

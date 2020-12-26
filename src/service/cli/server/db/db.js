@@ -22,6 +22,7 @@ const Comment = require(`./models/comment`)(sequelize);
 const OfferType = require(`./models/offer-type`)(sequelize);
 const Offer = require(`./models/offer`)(sequelize);
 const User = require(`./models/user`)(sequelize);
+const OfferCategories = require(`./models/offer-categories`)(sequelize);
 
 User.hasMany(Offer, {
   foreignKey: `userId`,
@@ -60,18 +61,32 @@ Comment.belongsTo(Offer, {
 });
 
 Category.belongsToMany(Offer, {
-  through: `Offer_Categories`,
+  through: OfferCategories,
   as: `offers`,
   timestamps: false,
   foreignKey: `categoryId`,
   otherKey: `offerId`,
 });
 Offer.belongsToMany(Category, {
-  through: `Offer_Categories`,
+  through: OfferCategories,
   as: `categories`,
   timestamps: false,
   foreignKey: `offerId`,
   otherKey: `categoryId`,
+});
+Category.hasMany(OfferCategories, {
+  foreignKey: `categoryId`
+});
+OfferCategories.belongsTo(Category, {
+  foreignKey: `categoryId`,
+  as: `category`
+});
+Offer.hasMany(OfferCategories, {
+  foreignKey: `offerId`
+});
+OfferCategories.belongsTo(Offer, {
+  foreignKey: `offerId`,
+  as: `offer`
 });
 
 const initDb = async () => {
@@ -86,6 +101,7 @@ module.exports = {
     Offer,
     Comment,
     OfferType,
+    OfferCategories
   },
   sequelize,
   initDb,

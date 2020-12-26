@@ -1,3 +1,4 @@
+/* eslint-disable max-nested-callbacks */
 "use strict";
 
 const express = require(`express`);
@@ -29,10 +30,19 @@ describe(`/offers route works correctly:`, () => {
     description: `Если найдёте дешевле — сброшу цену. Бонусом отдам все аксессуары.`,
     cost: 100000,
     picture: `item.jpg`,
-    category: [1],
+    categories: [1],
   };
 
-  const mockNewComment = {text: `Новый комментарий!`, userId: 1};
+  const updateOfferData = {
+    description: `Если найдёте дешевле — сброшу цену. Бонусом отдам все аксессуары.`,
+    cost: 100000,
+    picture: `item.jpg`,
+  };
+
+  const mockNewComment = {
+    text: `Новый комментарий, очень крутой комментарий!`,
+    userId: 1,
+  };
 
   describe(`/offers GET request`, () => {
     let response;
@@ -50,9 +60,46 @@ describe(`/offers route works correctly:`, () => {
 
     test(`returns list with correct length`, () =>
       expect(response.body.rows.length).toBe(5));
+  });
 
-    test(`returns list where second offer's id is correct`, () =>
-      expect(response.body.rows[1].id).toBe(2));
+  describe(`/offers/category/:categoryId GET request`, () => {
+    let response;
+
+    beforeAll(async () => {
+      await initAndFillMockDb();
+    });
+
+    beforeEach(async () => {
+      response = await request(app).get(`/offers/category/1`);
+    });
+
+    test(`returns 200 status code`, () =>
+      expect(response.statusCode).toBe(HttpCode.OK));
+
+    test(`returns list with correct length`, () =>
+      expect(response.body.offers.length).toBe(5));
+
+    test(`returns list where each offer has category with id equal 1`, () =>
+      expect(
+          response.body.offers.every((offer) =>
+            offer.categories.map((category) => category.id).includes(1)
+          )
+      ).toBeTruthy());
+  });
+
+  describe(`/offers/category/:categoryId wrong GET request`, () => {
+    let response;
+
+    beforeAll(async () => {
+      await initAndFillMockDb();
+    });
+
+    beforeEach(async () => {
+      response = await request(app).get(`/offers/category/invalid-id`);
+    });
+
+    test(`returns 400 status code if id is invalid`, () =>
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
   });
 
   describe(`/offers/:offerId GET request`, () => {
@@ -70,11 +117,28 @@ describe(`/offers route works correctly:`, () => {
       expect(response.statusCode).toBe(HttpCode.OK));
 
     test(`returns correct offer`, () => {
-      expect(response.body.title).toBe(`Отдам в хорошие руки подшивку «Мурзилка».`);
+      expect(response.body.title).toBe(
+          `Отдам в хорошие руки подшивку «Мурзилка».`
+      );
       expect(response.body.description).toBe(
           `Если товар не понравится — верну всё до последней копейки.`
       );
     });
+  });
+
+  describe(`/offers/:offerId wrong GET request`, () => {
+    let response;
+
+    beforeAll(async () => {
+      await initAndFillMockDb();
+    });
+
+    beforeEach(async () => {
+      response = await request(app).get(`/offers/invalid-id`);
+    });
+
+    test(`returns 400 status code if id is invalid`, () =>
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
   });
 
   describe(`/offers POST request`, () => {
@@ -114,7 +178,7 @@ describe(`/offers route works correctly:`, () => {
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).put(`/offers/1`).send(mockNewOffer);
+      response = await request(app).put(`/offers/1`).send(updateOfferData);
     });
 
     test(`returns 200 status code`, () =>
@@ -122,7 +186,9 @@ describe(`/offers route works correctly:`, () => {
 
     test(`changes offer in the list`, async () => {
       const responceAfterChanges = await request(app).get(`/offers/1`);
-      expect(responceAfterChanges.body.title).toBe(`Куплю антиквариат.`);
+      expect(responceAfterChanges.body.description).toBe(
+          `Если найдёте дешевле — сброшу цену. Бонусом отдам все аксессуары.`
+      );
     });
   });
 
@@ -134,15 +200,20 @@ describe(`/offers route works correctly:`, () => {
     });
 
     test(`returns 404 status code if offer id was not found`, async () => {
-      response = await request(app)
-        .put(`/offers/999`)
-        .send(mockNewOffer);
+      response = await request(app).put(`/offers/999`).send(updateOfferData);
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
     });
 
+    test(`returns 400 status code if offer id is invalid`, async () => {
+      response = await request(app)
+        .put(`/offers/invalid-id`)
+        .send(updateOfferData);
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
     test(`returns 400 status code if data is invalid`, async () => {
-      for (const key of Object.keys(mockNewOffer)) {
-        const badOffer = {...mockNewOffer};
+      for (const key of Object.keys(updateOfferData)) {
+        const badOffer = {...updateOfferData};
         delete badOffer[key];
         const badResponse = await request(app)
           .put(`/offers/QWEfOZ`)
@@ -174,11 +245,17 @@ describe(`/offers route works correctly:`, () => {
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).delete(`/offers/999`);
     });
 
-    test(`returns 204 status code anyway`, () =>
-      expect(response.statusCode).toBe(HttpCode.NO_CONTENT));
+    test(`returns 204 status code anyway`, async () => {
+      response = await request(app).delete(`/offers/999`);
+      expect(response.statusCode).toBe(HttpCode.NO_CONTENT);
+    });
+
+    test(`returns 404 status code if offer id is invalid`, async () => {
+      response = await request(app).delete(`/offers/invalid-id`);
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
   });
 
   describe(`/offers/:offerId/comments GET request`, () => {
@@ -194,6 +271,24 @@ describe(`/offers route works correctly:`, () => {
     });
 
     test(`returns comments list`, () => expect(response.body.length).toBe(2));
+  });
+
+  describe(`/offers/:offerId/comments wrong GET request`, () => {
+    let response;
+
+    beforeAll(async () => {
+      await initAndFillMockDb();
+    });
+
+    test(`returns 400 status code if offerId is invalid`, async () => {
+      response = await request(app).get(`/offers/invalid-id/comments`);
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`returns 404 status code if offerId is not exist`, async () => {
+      response = await request(app).get(`/offers/999/comments`);
+      expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
   describe(`/offers/:offerId/comments POST request`, () => {
@@ -215,7 +310,9 @@ describe(`/offers route works correctly:`, () => {
           `/offers/1/comments`
       );
 
-      expect(responseAfterCreation.body[2].text).toBe(`Новый комментарий!`);
+      expect(responseAfterCreation.body[2].text).toBe(
+          `Новый комментарий, очень крутой комментарий!`
+      );
     });
   });
 
@@ -235,6 +332,13 @@ describe(`/offers route works correctly:`, () => {
 
     test(`returns 400 status code if data is invalid`, async () => {
       response = await request(app).post(`/offers/1/comments`).send({
+        message: `Новый комментарий!`,
+      });
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`returns 400 status code if offerId is invalid`, async () => {
+      response = await request(app).post(`/offers/invalid-id/comments`).send({
         message: `Новый комментарий!`,
       });
       expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
@@ -268,15 +372,23 @@ describe(`/offers route works correctly:`, () => {
     });
 
     test(`returns 404 status code if an offer does not exist`, async () => {
-      response = await request(app).delete(
-          `/offers/999/comments/1`
-      );
+      response = await request(app).delete(`/offers/999/comments/1`);
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
     });
 
     test(`returns 204 status code if a comment does not exist`, async () => {
       response = await request(app).delete(`/offers/1/comments/999`);
       expect(response.statusCode).toBe(HttpCode.NO_CONTENT);
+    });
+
+    test(`returns 400 status code if offerId is invalid`, async () => {
+      response = await request(app).delete(`/offers/invalid-id/comments/1`);
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`returns 400 status code if commentId is invalid`, async () => {
+      response = await request(app).delete(`/offers/1/comments/invalid-id`);
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
     });
   });
 });

@@ -7,70 +7,57 @@ block content
         h1.visually-hidden Карточка объявления
         .ticket__content
           .ticket__img
-            img(src='/img/ticket.jpg', srcset='/img/ticket@2x.jpg 2x', alt='Изображение товара')
+            img(src=`/img/${itemOffer.picture}`, srcset='/img/ticket@2x.jpg 2x', alt='Изображение товара')
           .ticket__info
-            h2.ticket__title Мое старое кресло
+            h2.ticket__title #{itemOffer.title}
             .ticket__header
               p.ticket__price
-                span.js-sum 4000
+                span.js-sum #{itemOffer.cost}
                 |  ₽
-              p.ticket__action ПРОДАМ
+              p.ticket__action #{itemOffer.offerType.name === 'offer' ? 'ПРОДАМ' : 'КУПЛЮ'}
             .ticket__desc
-              p
-                | Продам свое старое кресло, чтобы сидеть и читать книги зимними вечерами. Ножки мягкие, мой пол не царапают. Кресло почти новое – продаю, т.к. надоел серый цвет. Можно, конечно, накинуть плед и спасти ситуацию, но я все-таки хочу просто другое кресло. В общем оно на самом деле удобное и с ним все хорошо, просто нам пора расстаться.
+              p #{itemOffer.description}
             .ticket__data
               p
-                b Дата добавления:
-                span 20 ноября 2019
+                b Дата добавления: 
+                span #{formatDate(new Date(itemOffer.createdAt))}
               p
-                b Автор:
-                a(href='#') Денис Шкатулкин
+                b Автор: 
+                a(href='#') #{`${itemOffer.owner.firstName} ${itemOffer.owner.lastName}`}
               p
-                b Контакты:
-                a(href='mailto:shkatulkin@ya.ru') shkatulkin@ya.ru
+                b Контакты: 
+                a(href=`mailto:${itemOffer.owner.email}`) #{itemOffer.owner.email}
             ul.ticket__tags
-              li
-                a.category-tile.category-tile--small(href='#')
-                  span.category-tile__image
-                    img(src='/img/cat.jpg', srcset='/img/cat@2x.jpg 2x', alt='Иконка категории')
-                  span.category-tile__label Дом
-              li
-                a.category-tile.category-tile--small(href='#')
-                  span.category-tile__image
-                    img(src='/img/cat04.jpg', srcset='/img/cat04@2x.jpg 2x', alt='Иконка категории')
-                  span.category-tile__label Спорт и отдых
+              each category in itemOffer.categories
+                li
+                  a.category-tile.category-tile--small(href=`/offers/category/${category.id}`)
+                    span.category-tile__image
+                      img(src=`/img/cat${category.id}.jpg`, srcset=`/img/cat-${category.id}@2x.jpg 2x`, alt='Иконка категории')
+                    span.category-tile__label #{category.name}
         .ticket__comments
           h2.ticket__subtitle Коментарии
           .ticket__comment-form
-            form.form.comment-form(action='#', method='post')
+            form.form.comment-form(action=`/offers/${itemOffer.id}/comments`, method='post')
               .comment-form__header
                 a.comment-form__avatar.avatar(href='#')
                   img(src='/img/avatar.jpg', srcset='/img/avatar@2x.jpg 2x', alt='Аватар пользователя')
                 p.comment-form__author Вам слово
               .comment-form__field
                 .form__field
-                  textarea#comment-field.js-field(name='comment', cols='30', rows='10', maxlength='400', minlength='50') Нормальное вообще кресло! А как насч
+                  textarea#comment-field.js-field(name='text', cols='30', rows='10', maxlength='400', minlength='1') #{prevCommentData ? prevCommentData.text : ''}
                   label(for='comment-field') Текст комментария
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'text')
+                      span(style={display: 'block', color: 'red'}) - #{error.message}
               button.comment-form__button.btn.btn--white.js-button(type='submit', disabled='') Отправить
           .ticket__comments-list
             ul.comments-list
-              li
-                .comment-card
-                  .comment-card__header
-                    a.comment-card__avatar.avatar(href='#')
-                      img(src='/img/avatar02.jpg', srcset='/img/avatar02@2x.jpg 2x', alt='Аватар пользователя')
-                    p.comment-card__author Георгий Шпиц
-                  .comment-card__content
-                    p Что это за рухлядь? Стыдно такое даже фотографировать, не то, что продавать.
-              li
-                .comment-card
-                  .comment-card__header
-                    a.comment-card__avatar.avatar(href='#')
-                      img(src='/img/avatar03.jpg', srcset='/img/avatar03@2x.jpg 2x', alt='Аватар пользователя')
-                    p.comment-card__author Александр Бурый
-                  .comment-card__content
-                    p
-                      | А можете доставить мне домой? Готов доплатить 300 сверху. 
-                      br
-                      | Живу в центре прямо рядом с Моховой улицей. Готов купить прямо сейчас. Мой телефон 9032594748
+              each comment in itemOffer.comments
+                li
+                  .comment-card
+                    .comment-card__header
+                      a.comment-card__avatar.avatar(href='#')
+                        img(src=`/img/${comment.user.avatar || 'avatar-d.jpg'}`, alt='Аватар пользователя')
+                      p.comment-card__author #{`${comment.user.firstName} ${comment.user.lastName}`}
+                    .comment-card__content
+                      p #{comment.text}

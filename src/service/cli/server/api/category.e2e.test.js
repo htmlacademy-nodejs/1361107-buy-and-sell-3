@@ -39,8 +39,38 @@ describe(`/categories route works correctly:`, () => {
 
     test(`returns correct list of categories`, () => {
       expect(response.body).toEqual(
-          expect.arrayContaining([{"id": 1, "name": `Книги`}, {"id": 2, "name": `Разное`}])
+          expect.arrayContaining([{"id": 1, "name": `Книги`, "offerCount": `5`}, {"id": 2, "name": `Разное`, "offerCount": `5`}])
       );
+    });
+  });
+
+  describe(`/categories/:categoryId GET request`, () => {
+    let response;
+
+    beforeAll(async () => {
+      await initAndFillMockDb();
+      response = await request(app).get(`/categories/1`);
+    });
+
+    test(`returns 200 status code`, () => {
+      expect(response.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`returns correct category`, () => {
+      expect(response.body.id).toBe(1);
+    });
+  });
+
+  describe(`/categories/:categoryId wrong GET request`, () => {
+    let response;
+
+    beforeAll(async () => {
+      await initAndFillMockDb();
+      response = await request(app).get(`/categories/invalid-id`);
+    });
+
+    test(`returns 400 status code if categoryid is invalid`, () => {
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
     });
   });
 });

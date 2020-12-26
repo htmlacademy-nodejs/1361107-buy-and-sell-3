@@ -6,12 +6,13 @@ block content
       .ticket-form__wrapper
         h1.ticket-form__title Редактировать публикацию
         .ticket-form__tile
-          form.ticket-form__form.form(action='#', method='post', enctype='multipart/form-data', autocomplete='off')
+          form.ticket-form__form.form(action=`/offers/edit/${offer.id}`, method='post', enctype='multipart/form-data', autocomplete='off')
             .ticket-form__avatar-container.js-preview-container.uploaded
               .ticket-form__avatar.js-preview
                 img(src=`/img/${offer.picture}`, alt='')
               .ticket-form__field-avatar
                 input#avatar.visually-hidden.js-file-field(type='file', name='picture')
+                input.visually-hidden(type='text', name='loadedPicture', value=offer.loadedPicture)
                 label(for='avatar')
                   span.ticket-form__text-upload Загрузить фото…
                   span.ticket-form__text-another Загрузить другое фото…
@@ -20,27 +21,33 @@ block content
                 .form__field
                   input#ticket-name.js-field(type='text', name='title', value=offer.title, required='')
                   label(for='title') Название
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'title')
+                      span(style={display: 'block', color: 'red'}) - #{error.message}
               .ticket-form__row
                 .form__field
                   textarea#comment-field.js-field(name='description', cols='30', rows='10', maxlength='400', minlength='50', required='')
                     | #{offer.description}
                   label(for='description') Описание
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'description')
+                      span(style={display: 'block', color: 'red'}) #{error.message}
               .ticket-form__row
-                select#category-field.form__select.js-multiple-select(name='category', data-label='Выбрать категорию публикации', multiple='')
+                select#category-field.form__select.js-multiple-select(name='categories', data-label='Выбрать категорию публикации', required='' multiple='')
                   each category in categories
-                    option(value=category.id selected=offer.categories.map(el => el.id).includes(category.id)) #{category.name}
+                    option(value=category.id selected=offer.categories.map(el => el.id ? el.id : Number(el)).includes(category.id)) #{category.name}
               .ticket-form__row
                 .form__field.form__field--price
                   input#price-field.js-field.js-price(type='number', name='cost', min='1', value=offer.cost, required='')
                   label(for='cost') Цена
-                  span Обязательное поле
+                  if (errorDetails)
+                    each error in errorDetails.filter((el) => el.context.key === 'cost')
+                      span(style={display: 'block', color: 'red'}) #{error.message}
                 .form__switch.switch
                   .switch__item
                     input#buy-field.visually-hidden(type='radio', name='typeId', value=1, checked=(offer.offerType.id === 1))
-                    label.switch__button(for='buy-field') Куплю
+                    label.switch__button(for='buy-field') Продам
                   .switch__item
                     input#sell-field.visually-hidden(type='radio', name='typeId', value=2, checked=(offer.offerType.id === 2))
-                    label.switch__button(for='sell-field') Продам
+                    label.switch__button(for='sell-field') Куплю
             button.form__button.btn.btn--medium.js-button(type='submit') Сохранить

@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 app.use(API_PREFIX, routes);
 
 app.use((req, res) => {
-  res.status(HttpCode.NOT_FOUND).send(ResponseMessage.API_ROUTE_NOT_FOUND);
+  res.status(HttpCode.NOT_FOUND).json({message: ResponseMessage.API_ROUTE_NOT_FOUND});
   logger.error(`Route not found: ${req.url}`);
 });
 

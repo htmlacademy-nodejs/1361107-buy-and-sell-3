@@ -100,51 +100,25 @@ exports.Env = {
   PRODUCTION: `production`,
 };
 
-exports.getSequelizeQueryOptions = (model, db) => {
-  const options = {
-    Offer: {
-      attributes: {exclude: [`userId`, `typeId`]},
-      include: [
-        {
-          model: db.User,
-          as: `owner`,
-          attributes: [`id`, `firstName`, `lastName`, `email`],
-        },
-        {model: db.OfferType, as: `offerType`},
-        {
-          model: db.Comment,
-          as: `comments`,
-          attributes: {exclude: [`userId`, `offerId`]},
-          include: {
-            model: db.User,
-            as: `user`,
-            attributes: [`id`, `firstName`, `lastName`, `email`],
-          },
-        },
-        {
-          model: db.Category,
-          as: `categories`,
-          through: {
-            attributes: [],
-          },
-        },
-      ],
-    },
-    Comment: {
-      attributes: {exclude: [`userId`]},
-      include: {
-        model: db.User,
-        as: `user`,
-        attributes: [`id`, `firstName`, `lastName`, `email`],
-      },
-    }
-  };
-
-  return options[model];
-};
-
 exports.DBErrorName = {
   FOREIGN_KEY_ERROR: `SequelizeForeignKeyConstraintError`,
   DATABASE_ERROR: `SequelizeDatabaseError`,
   VALIDATION_ERROR: `SequelizeValidationError`
+};
+
+exports.NewOfferMessage = {
+  MIN_TITLE_LENGTH: `Заголовок должен быть не меньше 10 символов`,
+  MAX_TITLE_LENGTH: `Заголовок должен быть не больше 100 символов`,
+  MIN_DESCRIPTION_LENGTH: `Описание должно быть не меньше 50 символов`,
+  MAX_DESCRIPTION_LENGTH: `Описание должно быть не больше 1000 символов`,
+  MIN_COST_NUMBER: `Стоимость должна быть не меньше 100`,
+  REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
+  WRONG_TYPE_ID: `Неверный id типа объявления`,
+  WRONG_CATEGORY: `Категория должна быть типа число`
+};
+
+exports.NewCommentMessage = {
+  MIN_TEXT_LENGTH: `Текст комментария должен быть не меньше 20 символов`,
+  MAX_TEXT_LENGTH: `Текст комментария должен быть не больше 200 символов`,
+  REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
 };

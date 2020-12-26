@@ -19,6 +19,7 @@ const Comment = require(`./models/comment`)(sequelize);
 const OfferType = require(`./models/offer-type`)(sequelize);
 const Offer = require(`./models/offer`)(sequelize);
 const User = require(`./models/user`)(sequelize);
+const OfferCategories = require(`./models/offer-categories`)(sequelize);
 
 User.hasMany(Offer, {
   foreignKey: `userId`,
@@ -69,6 +70,20 @@ Offer.belongsToMany(Category, {
   timestamps: false,
   foreignKey: `offerId`,
   otherKey: `categoryId`,
+});
+Category.hasMany(OfferCategories, {
+  foreignKey: `categoryId`
+});
+OfferCategories.belongsTo(Category, {
+  foreignKey: `categoryId`,
+  as: `category`
+});
+Offer.hasMany(OfferCategories, {
+  foreignKey: `offerId`
+});
+OfferCategories.belongsTo(Offer, {
+  foreignKey: `offerId`,
+  as: `offer`
 });
 
 const initAndFillMockDb = async () => {
@@ -225,6 +240,7 @@ module.exports = {
     Offer,
     Comment,
     OfferType,
+    OfferCategories
   },
   sequelize,
   initAndFillMockDb,

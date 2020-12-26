@@ -1,12 +1,14 @@
 "use strict";
 
 const {Router} = require(`express`);
-const {HttpCode, ResponseMessage} = require(`../../../../constants`);
+const {HttpCode} = require(`../../../../constants`);
 const offerExists = require(`../middleware/offer-exists`);
-const newOfferValidator = require(`../middleware/new-offer-validator`);
-const commentValidator = require(`../middleware/comment-validator`);
-const updateOfferValidator = require(`../middleware/update-offer-validator`);
-const {catchAsync, AppError} = require(`../../../../utils`);
+const {catchAsync} = require(`../../../../utils`);
+const schemaValidator = require(`../middleware/schema-validator`);
+const newOfferSchema = require(`../schemas/new-offer`);
+const newCommentSchema = require(`../schemas/new-comment`);
+const updateOfferSchema = require(`../schemas/update-offer`);
+const idValidator = require(`../middleware/id-validator`);
 
 module.exports = (app, offersService, commentsService) => {
   const route = new Router();
@@ -14,14 +16,26 @@ module.exports = (app, offersService, commentsService) => {
   route.get(
       `/`,
       catchAsync(async (req, res) => {
-        const page = +req.query.page || 1;
+        const page = Number(req.query.page) || 1;
         const result = await offersService.findAll(page);
 
         return res.status(HttpCode.OK).json(result);
       })
   );
 
-  route.get(`/:offerId`, offerExists(offersService), (req, res) => {
+  route.get(
+      `/category/:categoryId`,
+      idValidator,
+      catchAsync(async (req, res) => {
+        const {categoryId} = req.params;
+        const page = Number(req.query.page) || 1;
+        const result = await offersService.findByCategory(page, categoryId);
+
+        return res.status(HttpCode.OK).json(result);
+      })
+  );
+
+  route.get(`/:offerId`, [idValidator, offerExists(offersService)], (req, res) => {
     const {offer} = res.locals;
 
     return res.status(HttpCode.OK).json(offer);
@@ -29,7 +43,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.post(
       `/`,
-      newOfferValidator,
+      schemaValidator(newOfferSchema),
       catchAsync(async (req, res) => {
         const newOffer = await offersService.create(req.body);
 
@@ -39,7 +53,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.put(
       `/:offerId`,
-      [offerExists(offersService), updateOfferValidator],
+      [idValidator, offerExists(offersService), schemaValidator(updateOfferSchema)],
       catchAsync(async (req, res) => {
         const {offerId} = req.params;
 
@@ -51,14 +65,9 @@ module.exports = (app, offersService, commentsService) => {
 
   route.delete(
       `/:offerId`,
-      catchAsync(async (req, res, next) => {
+      idValidator,
+      catchAsync(async (req, res) => {
         const {offerId} = req.params;
-
-        if (isNaN(Number(offerId))) {
-          return next(
-              new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST)
-          );
-        }
 
         await offersService.delete(offerId);
         return res.status(HttpCode.NO_CONTENT).json({});
@@ -67,7 +76,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.get(
       `/:offerId/comments`,
-      offerExists(offersService),
+      [idValidator, offerExists(offersService)],
       catchAsync(async (req, res) => {
         const {offer} = res.locals;
 
@@ -79,15 +88,10 @@ module.exports = (app, offersService, commentsService) => {
 
   route.delete(
       `/:offerId/comments/:commentId`,
-      offerExists(offersService),
-      catchAsync(async (req, res, next) => {
+      [idValidator, offerExists(offersService)],
+      catchAsync(async (req, res) => {
         const {offer} = res.locals;
         const {commentId} = req.params;
-        if (isNaN(Number(commentId))) {
-          return next(
-              new AppError(ResponseMessage.BAD_REQUEST, HttpCode.BAD_REQUEST)
-          );
-        }
 
         await commentsService.delete(offer, commentId);
 
@@ -97,7 +101,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.post(
       `/:offerId/comments`,
-      [offerExists(offersService), commentValidator],
+      [idValidator, offerExists(offersService), schemaValidator(newCommentSchema)],
       catchAsync(async (req, res) => {
         const {offer} = res.locals;
         const newComment = await commentsService.create(offer, req.body);
