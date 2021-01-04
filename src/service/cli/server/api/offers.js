@@ -9,8 +9,11 @@ const newOfferSchema = require(`../schemas/new-offer`);
 const newCommentSchema = require(`../schemas/new-comment`);
 const updateOfferSchema = require(`../schemas/update-offer`);
 const idValidator = require(`../middleware/id-validator`);
+const isCategoryExists = require(`../middleware/is-category-exists`);
 
-module.exports = (app, offersService, commentsService) => {
+module.exports = (app, services) => {
+  const {offersService, commentsService, categoryService} = services;
+
   const route = new Router();
 
   route.get(
@@ -25,7 +28,7 @@ module.exports = (app, offersService, commentsService) => {
 
   route.get(
       `/category/:categoryId`,
-      idValidator,
+      [idValidator, isCategoryExists(categoryService)],
       catchAsync(async (req, res) => {
         const {categoryId} = req.params;
         const page = Number(req.query.page) || 1;
