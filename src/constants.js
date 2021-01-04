@@ -122,3 +122,12 @@ exports.NewCommentMessage = {
   MAX_TEXT_LENGTH: `Текст комментария должен быть не больше 200 символов`,
   REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
 };
+
+exports.NewUserMessage = {
+  MAX_FIRST_NAME_LENGTH: `Имя должно быть не больше 30 символов`,
+  MAX_LAST_NAME_LENGTH: `Фамилия должна быть не больше 30 символов`,
+  MIN_PASSWORD_LENGTH: `Пароль должен быть не меньше 6 символов`,
+  PASSWORDS_NOT_EQUALS: `Пароли не совпадают`,
+  WRONG_EMAIL: `Введите валидный email`,
+  REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
+};
