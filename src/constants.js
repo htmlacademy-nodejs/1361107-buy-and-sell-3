@@ -130,6 +130,9 @@ exports.NewUserMessage = {
   PASSWORDS_NOT_EQUALS: `Пароли не совпадают`,
   WRONG_EMAIL: `Введите валидный email`,
   REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
+  UNIQUE_EMAIL: `Пользователь с таким email уже существует`
 };
 
 exports.SALT_ROUNDS = 10;
+
+exports.UPLOAD_DIR = `../upload/img/`;

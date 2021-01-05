@@ -12,9 +12,7 @@ const {
   getCardColor,
 } = require(`../../utils`);
 const idValidator = require(`../middleware/id-validator`);
-const {PAGINATION_OFFSET} = require(`../../constants`);
-
-const UPLOAD_DIR = `../upload/img/`;
+const {PAGINATION_OFFSET, UPLOAD_DIR} = require(`../../constants`);
 
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 

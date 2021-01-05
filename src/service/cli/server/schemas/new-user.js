@@ -13,7 +13,7 @@ module.exports = Joi.object({
     "any.required": NewUserMessage.REQUIRED_FIELD,
   }),
   password: Joi.string().label(`Пароль`).min(6).required().messages({
-    "number.min": NewUserMessage.MIN_PASSWORD_LENGTH,
+    "string.min": NewUserMessage.MIN_PASSWORD_LENGTH,
     "any.required": NewUserMessage.REQUIRED_FIELD,
   }),
   repeatPassword: Joi.string().required().valid(Joi.ref(`password`)).messages({
