@@ -16,12 +16,12 @@ module.exports = Joi.object({
     "string.min": NewUserMessage.MIN_PASSWORD_LENGTH,
     "any.required": NewUserMessage.REQUIRED_FIELD,
   }),
-  repeatPassword: Joi.string().required().valid(Joi.ref(`password`)).messages({
+  repeatPassword: Joi.string().label(`Повторно введенный пароль`).required().valid(Joi.ref(`password`)).messages({
     "any.only": NewUserMessage.PASSWORDS_NOT_EQUALS,
     "any.required": NewUserMessage.REQUIRED_FIELD,
   }),
   avatar: Joi.string().label(`Фото`),
-  email: Joi.string().email().required().messages({
+  email: Joi.string().label(`Email`).email().required().messages({
     "any.required": NewUserMessage.REQUIRED_FIELD,
     "string.email": NewUserMessage.WRONG_EMAIL
   }),
