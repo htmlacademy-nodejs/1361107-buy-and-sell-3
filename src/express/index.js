@@ -39,7 +39,7 @@ app.use((req, res) =>
   })
 );
 app.use((err, req, res, _next) => {
-  console.trace(err);
+  console.log(err);
   const statusCode = err.response
     ? err.response.status
     : HttpCode.INTERNAL_SERVER_ERROR;

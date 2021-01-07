@@ -4,15 +4,18 @@
 const express = require(`express`);
 const request = require(`supertest`);
 const offers = require(`./offers`);
-const DataService = require(`../data-service/offers`);
-const CommentsService = require(`../data-service/comments`);
 const {HttpCode} = require(`../../../../constants`);
 const {mockDb, initAndFillMockDb, sequelize} = require(`../db/mock-db`);
+const {OffersService, CategoryService, CommentsService} = require(`../data-service`);
 
 const app = express();
 
 app.use(express.json());
-offers(app, new DataService(mockDb), new CommentsService(mockDb));
+offers(app, {
+  offersService: new OffersService(mockDb),
+  commentsService: new CommentsService(mockDb),
+  categoryService: new CategoryService(mockDb),
+});
 
 describe(`/offers route works correctly:`, () => {
   beforeAll(async () => {
