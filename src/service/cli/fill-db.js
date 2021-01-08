@@ -11,6 +11,7 @@ const {
   MAX_DESCR_SIZE,
   SumRestrict,
   CommentRestrict,
+  SALT_ROUNDS,
 } = require(`../../constants`);
 const {
   readContent,
@@ -20,6 +21,8 @@ const {
 } = require(`../../utils`);
 const {getLogger} = require(`../lib/logger`);
 const {db, sequelize} = require(`./server/db/db`);
+const bcrypt = require(`bcrypt`);
+
 const logger = getLogger({name: `database`});
 
 module.exports = {
@@ -60,7 +63,7 @@ module.exports = {
           ],
           lastName: shuffle(lastNames)[getRandomInt(0, firstNames.length - 1)],
           email: `${nanoid(MAX_ID_LENGTH)}@mail.ru`,
-          password: `password`,
+          password: bcrypt.hashSync(`password`, SALT_ROUNDS),
         };
       });
 
