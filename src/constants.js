@@ -114,7 +114,8 @@ exports.NewOfferMessage = {
   MIN_COST_NUMBER: `Стоимость должна быть не меньше 100`,
   REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
   WRONG_TYPE_ID: `Неверный id типа объявления`,
-  WRONG_CATEGORY: `Категория должна быть типа число`
+  WRONG_CATEGORY: `Категория должна быть типа число`,
+  MIN_CATEGORY_ARRAY_LENGTH: `Необходимо указать хотя бы одну категорию`
 };
 
 exports.NewCommentMessage = {
