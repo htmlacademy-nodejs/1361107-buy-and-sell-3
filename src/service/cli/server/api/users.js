@@ -12,7 +12,7 @@ module.exports = (app, service) => {
   const route = new Router();
 
   route.post(
-      `/`,
+      `/signup`,
       schemaValidator(newUserSchema),
       catchAsync(async (req, res) => {
         const newUser = await service.create(req.body);

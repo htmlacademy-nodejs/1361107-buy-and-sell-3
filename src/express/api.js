@@ -66,9 +66,16 @@ class API {
   }
 
   async createUser(data) {
-    return await this._load(`/user`, {
+    return await this._load(`/user/signup`, {
       method: `POST`,
-      data
+      data,
+    });
+  }
+
+  async loginUser(data) {
+    return await this._load(`/user/login`, {
+      method: `POST`,
+      data,
     });
   }
 }
