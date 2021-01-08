@@ -38,7 +38,11 @@ module.exports = (service) =>
       );
     }
 
-    res.locals.user = user;
+    const filteredUserData = {...user.dataValues};
+
+    delete filteredUserData.password;
+
+    res.locals.user = filteredUserData;
 
     return next();
   });
