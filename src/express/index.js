@@ -16,8 +16,29 @@ const {
 } = require(`../constants`);
 const chalk = require(`chalk`);
 const config = require(`../config`);
+const {sequelize} = require(`../service/cli/server/db/db`);
+const session = require(`express-session`);
+const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
+
+const mySessionStore = new SequelizeStore({
+  db: sequelize,
+  expiration: 180000,
+  checkExpirationInterval: 60000,
+});
 
 const app = express();
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  store: mySessionStore,
+  resave: false,
+  saveUninitialized: false,
+  name: `session_id`,
+}));
+
+(async () => {
+  await sequelize.sync({force: false});
+})();
 
 app.use(express.static(path.resolve(__dirname, DirPath.PUBLIC)));
 app.use(express.static(path.resolve(__dirname, DirPath.UPDATE)));
