@@ -14,6 +14,10 @@ class UsersService {
 
     return newUser;
   }
+
+  async findByEmail(email) {
+    return await this._db.User.findOne({where: {email}});
+  }
 }
 
 module.exports = UsersService;
