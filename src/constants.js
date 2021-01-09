@@ -62,6 +62,7 @@ exports.ResponseMessage = {
   API_ROUTE_NOT_FOUND: `Route not found.`,
   PAGE_NOT_FOUND: `Page not found.`,
   BAD_REQUEST: `Invalid data.`,
+  FORBIDDEN: `This action is forbidden for you.`
 };
 
 exports.API_PREFIX = `/api`;

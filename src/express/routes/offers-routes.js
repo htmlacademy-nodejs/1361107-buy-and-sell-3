@@ -13,6 +13,8 @@ const {
 } = require(`../../utils`);
 const idValidator = require(`../middleware/id-validator`);
 const {PAGINATION_OFFSET, UPLOAD_DIR} = require(`../../constants`);
+const privateRoute = require(`../middleware/private-route`);
+const checkAuthorization = require(`../middleware/check-authorization`);
 
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 
@@ -61,19 +63,20 @@ offersRouter.get(
 
 offersRouter.get(
     `/add`,
+    privateRoute,
     catchAsync(async (req, res) => {
       const {user} = req.session;
       const categories = await api.getCategories();
       res.render(`new-ticket`, {
         categories,
-        user
+        user,
       });
     })
 );
 
 offersRouter.get(
     `/edit/:id`,
-    idValidator,
+    [privateRoute, checkAuthorization, idValidator, upload.single(`picture`)],
     catchAsync(async (req, res) => {
       const {user} = req.session;
       const {id} = req.params;
@@ -87,8 +90,7 @@ offersRouter.get(
 
 offersRouter.post(
     `/edit/:id`,
-    idValidator,
-    upload.single(`picture`),
+    [idValidator, upload.single(`picture`)],
     catchAsync(async (req, res) => {
       const {id} = req.params;
       const {body, file} = req;
@@ -127,7 +129,7 @@ offersRouter.post(
           },
           categories,
           errorDetails,
-          user
+          user,
         });
       }
     })
@@ -148,17 +150,17 @@ offersRouter.post(
     `/:id/comments`,
     idValidator,
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const {id} = req.params;
       const {body} = req;
       const commentData = {
-        userId: 1,
+        userId: user.id,
         text: body.text,
       };
       try {
         await api.createComment(id, commentData);
         res.redirect(`/offers/${id}`);
       } catch (error) {
-        const {user} = req.session;
         const {details: errorDetails} = error.response.data.error;
         const itemOffer = await api.getOffer(id);
         res.render(`ticket`, {
@@ -166,7 +168,7 @@ offersRouter.post(
           formatDate,
           prevCommentData: {text: commentData.text},
           errorDetails,
-          user
+          user,
         });
       }
     })
@@ -176,6 +178,7 @@ offersRouter.post(
     `/add`,
     upload.single(`picture`),
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const {body, file} = req;
       const offerData = {
         title: body.title,
@@ -184,7 +187,7 @@ offersRouter.post(
         cost: body.cost,
         picture: file ? file.filename : `item01.jpg`,
         categories: body.categories,
-        userId: 1,
+        userId: user.id,
       };
       if (typeof offerData.categories === `string`) {
         offerData.categories = [offerData.categories];
@@ -193,14 +196,13 @@ offersRouter.post(
         await api.createOffer(offerData);
         res.redirect(`/my`);
       } catch (error) {
-        const {user} = req.session;
         const {details} = error.response.data.error;
         const categories = await api.getCategories();
         res.render(`new-ticket`, {
           categories,
           prevOfferData: offerData,
           errorDetails: details,
-          user
+          user,
         });
       }
     })

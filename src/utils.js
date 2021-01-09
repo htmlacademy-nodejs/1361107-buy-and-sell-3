@@ -168,7 +168,12 @@ exports.getSequelizeQueryOptions = (model, db) => {
       },
     },
     User: {
-      attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`]
+      attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`],
+      include: {
+        model: db.Offer,
+        as: `offers`,
+        attributes: [`id`]
+      }
     }
   };
 

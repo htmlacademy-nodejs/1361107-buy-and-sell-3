@@ -17,12 +17,23 @@ class UsersService {
   }
 
   async findOne(id) {
-    return await this._db.User.findByPk(id, getSequelizeQueryOptions(`User`, this._db));
+    return await this._db.User.findByPk(
+        id,
+        getSequelizeQueryOptions(`User`, this._db)
+    );
   }
 
   async findByEmail(email) {
     return await this._db.User.findOne({
-      attributes: [`id`, `firstName`, `lastName`, `email`, `password`, `avatar`],
+      ...getSequelizeQueryOptions(`User`, this._db),
+      attributes: [
+        `id`,
+        `firstName`,
+        `lastName`,
+        `email`,
+        `password`,
+        `avatar`,
+      ],
       where: {email},
     });
   }

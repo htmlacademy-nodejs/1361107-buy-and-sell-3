@@ -11,7 +11,7 @@ const updateOfferSchema = require(`../schemas/update-offer`);
 const idValidator = require(`../middleware/id-validator`);
 const isCategoryExists = require(`../middleware/is-category-exists`);
 const isUserExists = require(`../middleware/is-user-exists`);
-const checkAuthorization = require(`../middleware/checkAuthorization`);
+const checkAuthorization = require(`../middleware/check-authorization`);
 
 module.exports = (app, services) => {
   const {

@@ -42,6 +42,10 @@ module.exports = (service) =>
 
     delete filteredUserData.password;
 
+    filteredUserData.offers = filteredUserData.offers.map((offer) => {
+      return offer.id;
+    });
+
     res.locals.user = filteredUserData;
 
     return next();
