@@ -18,6 +18,7 @@ const {
   shuffle,
   getRandomInt,
   getPictureFileName,
+  getAvatar,
 } = require(`../../utils`);
 const {getLogger} = require(`../lib/logger`);
 const {db, sequelize} = require(`./server/db/db`);
@@ -64,6 +65,7 @@ module.exports = {
           lastName: shuffle(lastNames)[getRandomInt(0, firstNames.length - 1)],
           email: `${nanoid(MAX_ID_LENGTH)}@mail.ru`,
           password: bcrypt.hashSync(`password`, SALT_ROUNDS),
+          avatar: getAvatar(),
         };
       });
 

@@ -189,3 +189,5 @@ exports.formatDate = (date) => {
 
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
+
+exports.getAvatar = () => `avatar0${getRandomInt(1, 5)}.jpg`;
