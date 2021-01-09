@@ -11,10 +11,10 @@ const {
   getPageList,
   getCardColor,
 } = require(`../../utils`);
-const idValidator = require(`../middleware/id-validator`);
 const {PAGINATION_OFFSET, UPLOAD_DIR} = require(`../../constants`);
 const privateRoute = require(`../middleware/private-route`);
 const checkAuthorization = require(`../middleware/check-authorization`);
+const idValidator = require(`../../service/cli/server/middleware/id-validator`);
 
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 
@@ -92,6 +92,7 @@ offersRouter.post(
     `/edit/:id`,
     [idValidator, upload.single(`picture`)],
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const {id} = req.params;
       const {body, file} = req;
       const offerData = {
@@ -111,10 +112,9 @@ offersRouter.post(
         offerData.picture = file.filename;
       }
       try {
-        await api.updateOffer(id, offerData);
+        await api.updateOffer(id, offerData, user.email);
         res.redirect(`/offers/${id}`);
       } catch (error) {
-        const {user} = req.session;
         const {details: errorDetails} = error.response.data.error;
         const [offer, categories] = await Promise.all([
           api.getOffer(id),
@@ -174,6 +174,17 @@ offersRouter.post(
     })
 );
 
+offersRouter.get(
+    `/:offerId/delete-comment/:commentId`,
+    [idValidator, privateRoute, checkAuthorization],
+    catchAsync(async (req, res) => {
+      const {user} = req.session;
+      const {offerId, commentId} = req.params;
+      await api.deleteComment(offerId, commentId, user.email);
+      res.status(204).send();
+    })
+);
+
 offersRouter.post(
     `/add`,
     upload.single(`picture`),
@@ -205,6 +216,17 @@ offersRouter.post(
           user,
         });
       }
+    })
+);
+
+offersRouter.get(
+    `/delete/:id`,
+    [idValidator, privateRoute, checkAuthorization],
+    catchAsync(async (req, res) => {
+      const {user} = req.session;
+      const {id} = req.params;
+      await api.deleteOffer(id, user.email);
+      res.status(204).send();
     })
 );
 

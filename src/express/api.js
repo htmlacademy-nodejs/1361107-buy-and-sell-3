@@ -58,10 +58,31 @@ class API {
     });
   }
 
-  async updateOffer(offerId, data) {
+  async deleteComment(offerId, commentId, userEmail) {
+    return this._load(`/offers/${offerId}/comments/${commentId}`, {
+      method: `DELETE`,
+      params: {
+        userEmail
+      },
+    });
+  }
+
+  async updateOffer(offerId, data, userEmail) {
     return this._load(`/offers/${offerId}`, {
       method: `PUT`,
+      params: {
+        userEmail
+      },
       data
+    });
+  }
+
+  async deleteOffer(offerId, userEmail) {
+    return this._load(`/offers/${offerId}`, {
+      method: `DELETE`,
+      params: {
+        userEmail
+      },
     });
   }
 
