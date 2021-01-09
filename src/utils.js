@@ -168,7 +168,7 @@ exports.getSequelizeQueryOptions = (model, db) => {
       },
     },
     User: {
-      attributes: [`id`, `firstName`, `lastName`, `email`]
+      attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`]
     }
   };
 

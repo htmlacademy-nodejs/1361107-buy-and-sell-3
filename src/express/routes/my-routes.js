@@ -8,6 +8,7 @@ const api = require(`../api`).getAPI();
 const myRouter = new Router();
 
 myRouter.get(`/`, async (req, res) => {
+  const {user} = req.session;
   const page = Number(req.query.page) || 1;
   const {count, rows: listOffers} = await api.getOffers(page);
   listOffers.forEach((offer) => {
@@ -15,12 +16,13 @@ myRouter.get(`/`, async (req, res) => {
   });
   const maxPage = Math.ceil(count / PAGINATION_OFFSET);
   const pageList = getPageList(page, maxPage);
-  res.render(`my-tickets`, {page, maxPage, pageList, listOffers});
+  res.render(`my-tickets`, {page, maxPage, pageList, listOffers, user, navPage: `offers`});
 });
 
 myRouter.get(`/comments`, async (req, res) => {
-  const listOffers = await api.getOffers();
-  res.render(`comments`, {listOffers: listOffers.slice(0, 3)});
+  const {user} = req.session;
+  const {rows: listOffers} = await api.getOffers();
+  res.render(`comments`, {listOffers: listOffers.slice(0, 3), user, navPage: `comments`});
 });
 
 module.exports = myRouter;

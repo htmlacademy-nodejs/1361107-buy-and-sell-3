@@ -10,6 +10,7 @@ const searchRouter = new Router();
 searchRouter.get(
     `/`,
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       let {page, search} = req.query;
       page = Number(page) || 1;
       try {
@@ -29,11 +30,13 @@ searchRouter.get(
           results,
           search,
           count,
+          user
         });
       } catch (error) {
         res.render(`search-result`, {
           results: [],
           search,
+          user
         });
       }
     })

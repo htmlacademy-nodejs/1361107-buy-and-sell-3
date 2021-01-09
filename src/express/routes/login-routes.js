@@ -12,7 +12,7 @@ loginRouter.post(`/`, catchAsync(async (req, res) => {
   try {
     const user = await api.loginUser(req.body);
     req.session.user = user;
-    res.redirect(`/`);
+    res.redirect(`/login/processing`);
   } catch (error) {
     const {details: errorDetails} = error.response.data.error;
     res.render(`login`, {
@@ -20,8 +20,8 @@ loginRouter.post(`/`, catchAsync(async (req, res) => {
       errorDetails
     });
   }
-
-
 }));
+
+loginRouter.get(`/processing`, (req, res) => res.redirect(`/`));
 
 module.exports = loginRouter;

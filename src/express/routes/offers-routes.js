@@ -32,6 +32,7 @@ offersRouter.get(
     `/category/:id`,
     idValidator,
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const page = Number(req.query.page) || 1;
       const {id} = req.params;
       const {count, offers: listOffers} = await api.getOffersByCategory(
@@ -52,7 +53,8 @@ offersRouter.get(
         listOffers,
         category,
         count,
-        categories
+        categories,
+        user,
       });
     })
 );
@@ -60,10 +62,11 @@ offersRouter.get(
 offersRouter.get(
     `/add`,
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const categories = await api.getCategories();
       res.render(`new-ticket`, {
         categories,
-        prevOfferData: Object.keys(req.query).length === 0 ? null : req.query,
+        user
       });
     })
 );
@@ -72,12 +75,13 @@ offersRouter.get(
     `/edit/:id`,
     idValidator,
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const {id} = req.params;
       const [offer, categories] = await Promise.all([
         api.getOffer(id),
         api.getCategories(),
       ]);
-      res.render(`ticket-edit`, {offer, categories});
+      res.render(`ticket-edit`, {offer, categories, user});
     })
 );
 
@@ -108,6 +112,7 @@ offersRouter.post(
         await api.updateOffer(id, offerData);
         res.redirect(`/offers/${id}`);
       } catch (error) {
+        const {user} = req.session;
         const {details: errorDetails} = error.response.data.error;
         const [offer, categories] = await Promise.all([
           api.getOffer(id),
@@ -122,6 +127,7 @@ offersRouter.post(
           },
           categories,
           errorDetails,
+          user
         });
       }
     })
@@ -131,9 +137,10 @@ offersRouter.get(
     `/:id`,
     idValidator,
     catchAsync(async (req, res) => {
+      const {user} = req.session;
       const {id} = req.params;
       const itemOffer = await api.getOffer(id);
-      res.render(`ticket`, {itemOffer, formatDate});
+      res.render(`ticket`, {itemOffer, formatDate, user});
     })
 );
 
@@ -151,6 +158,7 @@ offersRouter.post(
         await api.createComment(id, commentData);
         res.redirect(`/offers/${id}`);
       } catch (error) {
+        const {user} = req.session;
         const {details: errorDetails} = error.response.data.error;
         const itemOffer = await api.getOffer(id);
         res.render(`ticket`, {
@@ -158,6 +166,7 @@ offersRouter.post(
           formatDate,
           prevCommentData: {text: commentData.text},
           errorDetails,
+          user
         });
       }
     })
@@ -184,12 +193,14 @@ offersRouter.post(
         await api.createOffer(offerData);
         res.redirect(`/my`);
       } catch (error) {
+        const {user} = req.session;
         const {details} = error.response.data.error;
         const categories = await api.getCategories();
         res.render(`new-ticket`, {
           categories,
           prevOfferData: offerData,
           errorDetails: details,
+          user
         });
       }
     })

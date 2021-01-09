@@ -22,7 +22,7 @@ class UsersService {
 
   async findByEmail(email) {
     return await this._db.User.findOne({
-      attributes: [`id`, `firstName`, `lastName`, `email`, `password`],
+      attributes: [`id`, `firstName`, `lastName`, `email`, `password`, `avatar`],
       where: {email},
     });
   }
