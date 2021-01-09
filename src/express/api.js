@@ -24,6 +24,10 @@ class API {
     return this._load(`/offers/category/${categoryId}`, {params: {page}});
   }
 
+  async getMyOffers(page, userEmail) {
+    return this._load(`/offers/my`, {params: {page, userEmail}});
+  }
+
   async getOffer(id) {
     return this._load(`/offers/${id}`);
   }

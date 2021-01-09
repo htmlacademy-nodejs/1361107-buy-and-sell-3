@@ -14,7 +14,7 @@ myRouter.get(
     catchAsync(async (req, res) => {
       const {user} = req.session;
       const page = Number(req.query.page) || 1;
-      const {count, rows: listOffers} = await api.getOffers(page);
+      const {count, rows: listOffers} = await api.getMyOffers(page, user.email);
       listOffers.forEach((offer) => {
         offer.cardColor = getCardColor();
       });
