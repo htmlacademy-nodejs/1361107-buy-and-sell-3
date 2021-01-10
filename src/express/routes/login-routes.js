@@ -2,11 +2,12 @@
 
 const {Router} = require(`express`);
 const {catchAsync} = require(`../../utils`);
+const alreadyRegistered = require(`../middleware/already-registered`);
 const api = require(`../api`).getAPI();
 
 const loginRouter = new Router();
 
-loginRouter.get(`/`, (req, res) => res.render(`login`));
+loginRouter.get(`/`, alreadyRegistered, (req, res) => res.render(`login`));
 
 loginRouter.post(`/`, catchAsync(async (req, res) => {
   try {

@@ -6,6 +6,7 @@ const path = require(`path`);
 const {UPLOAD_DIR, NewUserMessage} = require(`../../constants`);
 const {nanoid} = require(`nanoid`);
 const {catchAsync} = require(`../../utils`);
+const alreadyRegistered = require(`../middleware/already-registered`);
 const api = require(`../api`).getAPI();
 
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
@@ -22,7 +23,7 @@ const upload = multer({storage});
 
 const registerRouter = new Router();
 
-registerRouter.get(`/`, (req, res) => res.render(`sign-up`));
+registerRouter.get(`/`, alreadyRegistered, (req, res) => res.render(`sign-up`));
 
 registerRouter.post(
     `/`,
