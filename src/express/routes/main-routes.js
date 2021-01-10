@@ -13,10 +13,15 @@ mainRouter.get(
       const {user} = req.session;
       const page = Number(req.query.page) || 1;
       const {count, rows: listOffers} = await api.getOffers(page);
-      const categories = await api.getCategories();
+      const discussedOffers = await api.getDicussedOffers();
       listOffers.forEach((offer) => {
         offer.cardColor = getCardColor();
       });
+      discussedOffers.forEach((offer) => {
+        console.log(offer);
+        offer.cardColor = getCardColor();
+      });
+      const categories = await api.getCategories();
       const maxPage = Math.ceil(count / PAGINATION_OFFSET);
       const pageList = getPageList(page, maxPage);
       return res.render(`main`, {
@@ -25,7 +30,8 @@ mainRouter.get(
         pageList,
         listOffers,
         categories,
-        user
+        user,
+        discussedOffers
       });
     })
 );

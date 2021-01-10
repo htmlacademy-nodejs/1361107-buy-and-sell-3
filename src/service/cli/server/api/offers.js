@@ -57,6 +57,15 @@ module.exports = (app, services) => {
   );
 
   route.get(
+      `/discussed`,
+      catchAsync(async (req, res) => {
+        const result = await offersService.getDiscussed();
+
+        return res.status(HttpCode.OK).json(result);
+      })
+  );
+
+  route.get(
       `/:offerId`,
       [idValidator, offerExists(offersService)],
       (req, res) => {
