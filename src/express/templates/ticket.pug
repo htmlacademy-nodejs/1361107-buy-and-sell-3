@@ -35,21 +35,29 @@ block content
                       img(src=`/img/cat${category.id}.jpg`, srcset=`/img/cat-${category.id}@2x.jpg 2x`, alt='Иконка категории')
                     span.category-tile__label #{category.name}
         .ticket__comments
-          h2.ticket__subtitle Коментарии
-          .ticket__comment-form
-            form.form.comment-form(action=`/offers/${itemOffer.id}/comments`, method='post')
-              .comment-form__header
-                a.comment-form__avatar.avatar(href='#')
-                  img(src='/img/avatar.jpg', srcset='/img/avatar@2x.jpg 2x', alt='Аватар пользователя')
-                p.comment-form__author Вам слово
-              .comment-form__field
-                .form__field
-                  textarea#comment-field.js-field(name='text', cols='30', rows='10', maxlength='400', minlength='1') #{prevCommentData ? prevCommentData.text : ''}
-                  label(for='comment-field') Текст комментария
-                  if (errorDetails)
-                    each error in errorDetails.filter((el) => el.context.key === 'text')
-                      span(style={display: 'block', color: 'red'}) - #{error.message}
-              button.comment-form__button.btn.btn--white.js-button(type='submit', disabled='') Отправить
+          if (user)
+            h2.ticket__subtitle Коментарии
+            .ticket__comment-form
+              form.form.comment-form(action=`/offers/${itemOffer.id}/comments`, method='post')
+                .comment-form__header
+                  a.comment-form__avatar.avatar(href='#')
+                    img(src=`/img/${user.avatar}`, srcset='/img/avatar@2x.jpg 2x', alt='Аватар пользователя')
+                  p.comment-form__author Вам слово
+                .comment-form__field
+                  .form__field
+                    textarea#comment-field.js-field(name='text', cols='30', rows='10', maxlength='400', minlength='1') #{prevCommentData ? prevCommentData.text : ''}
+                    label(for='comment-field') Текст комментария
+                    if (errorDetails)
+                      each error in errorDetails.filter((el) => el.context.key === 'text')
+                        span(style={display: 'block', color: 'red'}) - #{error.message}
+                button.comment-form__button.btn.btn--white.js-button(type='submit', disabled='') Отправить
+          else
+            .ticket__warning
+              p
+                | Отправка комментариев доступна 
+                br
+                | только для зарегистрированных пользователей.
+              a.btn.btn--big(href='/register') Вход и регистрация  
           .ticket__comments-list
             ul.comments-list
               each comment in itemOffer.comments
@@ -57,7 +65,7 @@ block content
                   .comment-card
                     .comment-card__header
                       a.comment-card__avatar.avatar(href='#')
-                        img(src=`/img/${comment.user.avatar || 'avatar-d.jpg'}`, alt='Аватар пользователя')
+                        img(src=`/img/${comment.user.avatar}`, alt='Аватар пользователя')
                       p.comment-card__author #{`${comment.user.firstName} ${comment.user.lastName}`}
                     .comment-card__content
                       p #{comment.text}
