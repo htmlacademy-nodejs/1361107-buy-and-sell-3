@@ -31,18 +31,18 @@ const upload = multer({storage});
 const offersRouter = new Router();
 
 offersRouter.get(
-    `/category/:id`,
+    `/category/:categoryId`,
     idValidator,
     catchAsync(async (req, res) => {
       const {user} = req.session;
       const page = Number(req.query.page) || 1;
-      const {id} = req.params;
+      const {categoryId} = req.params;
       const {count, offers: listOffers} = await api.getOffersByCategory(
           page,
-          id
+          categoryId
       );
       const categories = await api.getCategories();
-      const category = await api.getCategory(id);
+      const category = await api.getCategory(categoryId);
       listOffers.forEach((offer) => {
         offer.cardColor = getCardColor();
       });
@@ -75,13 +75,13 @@ offersRouter.get(
 );
 
 offersRouter.get(
-    `/edit/:id`,
+    `/edit/:offerId`,
     [privateRoute, checkAuthorization, idValidator, upload.single(`picture`)],
     catchAsync(async (req, res) => {
       const {user} = req.session;
-      const {id} = req.params;
+      const {offerId} = req.params;
       const [offer, categories] = await Promise.all([
-        api.getOffer(id),
+        api.getOffer(offerId),
         api.getCategories(),
       ]);
       res.render(`ticket-edit`, {offer, categories, user});
@@ -89,11 +89,11 @@ offersRouter.get(
 );
 
 offersRouter.post(
-    `/edit/:id`,
+    `/edit/:offerId`,
     [idValidator, upload.single(`picture`)],
     catchAsync(async (req, res) => {
       const {user} = req.session;
-      const {id} = req.params;
+      const {offerId} = req.params;
       const {body, file} = req;
       const offerData = {
         title: body.title,
@@ -112,12 +112,12 @@ offersRouter.post(
         offerData.picture = file.filename;
       }
       try {
-        await api.updateOffer(id, offerData, user.email);
-        res.redirect(`/offers/${id}`);
+        await api.updateOffer(offerId, offerData, user.email);
+        res.redirect(`/offers/${offerId}`);
       } catch (error) {
         const {details: errorDetails} = error.response.data.error;
         const [offer, categories] = await Promise.all([
-          api.getOffer(id),
+          api.getOffer(offerId),
           api.getCategories(),
         ]);
         res.render(`ticket-edit`, {
@@ -136,33 +136,34 @@ offersRouter.post(
 );
 
 offersRouter.get(
-    `/:id`,
+    `/:offerId`,
     idValidator,
     catchAsync(async (req, res) => {
+      console.log(`lol`);
       const {user} = req.session;
-      const {id} = req.params;
-      const itemOffer = await api.getOffer(id);
+      const {offerId} = req.params;
+      const itemOffer = await api.getOffer(offerId);
       res.render(`ticket`, {itemOffer, formatDate, user});
     })
 );
 
 offersRouter.post(
-    `/:id/comments`,
+    `/:offerId/comments`,
     idValidator,
     catchAsync(async (req, res) => {
       const {user} = req.session;
-      const {id} = req.params;
+      const {offerId} = req.params;
       const {body} = req;
       const commentData = {
         userId: user.id,
         text: body.text,
       };
       try {
-        await api.createComment(id, commentData);
-        res.redirect(`/offers/${id}`);
+        await api.createComment(offerId, commentData);
+        res.redirect(`/offers/${offerId}`);
       } catch (error) {
         const {details: errorDetails} = error.response.data.error;
-        const itemOffer = await api.getOffer(id);
+        const itemOffer = await api.getOffer(offerId);
         res.render(`ticket`, {
           itemOffer,
           formatDate,
@@ -180,6 +181,7 @@ offersRouter.get(
     catchAsync(async (req, res) => {
       const {user} = req.session;
       const {offerId, commentId} = req.params;
+      console.log(commentId, offerId);
       await api.deleteComment(offerId, commentId, user.email);
       res.status(204).send();
     })
@@ -220,12 +222,12 @@ offersRouter.post(
 );
 
 offersRouter.get(
-    `/delete/:id`,
+    `/delete/:offerId`,
     [idValidator, privateRoute, checkAuthorization],
     catchAsync(async (req, res) => {
       const {user} = req.session;
-      const {id} = req.params;
-      await api.deleteOffer(id, user.email);
+      const {offerId} = req.params;
+      await api.deleteOffer(offerId, user.email);
       res.status(204).send();
     })
 );

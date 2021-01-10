@@ -6,7 +6,7 @@ const api = require(`../api`).getAPI();
 
 module.exports = catchAsync(async (req, res, next) => {
   const {user} = req.session;
-  const {id: offerId} = req.params;
+  const {offerId} = req.params;
   const offer = await api.getOffer(offerId);
 
   if (!offer.owner.email !== user.email) {
