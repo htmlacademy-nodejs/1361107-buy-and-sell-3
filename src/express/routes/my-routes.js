@@ -36,11 +36,17 @@ myRouter.get(
     privateRoute,
     catchAsync(async (req, res) => {
       const {user} = req.session;
-      const {rows: listOffers} = await api.getOffers();
+      const page = Number(req.query.page) || 1;
+      const {count, rows: listOffers} = await api.getMyOffers(page, user.email);
+      const maxPage = Math.ceil(count / PAGINATION_OFFSET);
+      const pageList = getPageList(page, maxPage);
       res.render(`comments`, {
         listOffers: listOffers.slice(0, 3),
         user,
         navPage: `comments`,
+        page,
+        maxPage,
+        pageList
       });
     })
 );

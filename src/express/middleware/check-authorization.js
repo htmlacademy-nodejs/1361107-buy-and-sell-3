@@ -9,7 +9,7 @@ module.exports = catchAsync(async (req, res, next) => {
   const {offerId} = req.params;
   const offer = await api.getOffer(offerId);
 
-  if (!offer.owner.email !== user.email) {
+  if (offer.owner.email !== user.email) {
     res.status(HttpCode.BAD_REQUEST).render(`errors/400`, {
       statusCode: HttpCode.FORBIDDEN,
       message: ResponseMessage.FORBIDDEN,
