@@ -25,7 +25,7 @@ block content
                           a(href=`/offers/category/${category.id}`) #{category.name}
                     .ticket-card__header
                       h3.ticket-card__title
-                        a(href='#') #{result.title}
+                        a(href=`/offers/${result.id}`) #{result.title}
                       p.ticket-card__price
                         span.js-sum #{result.cost}
                         |  ₽

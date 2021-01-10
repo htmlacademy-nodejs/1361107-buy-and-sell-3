@@ -15,7 +15,7 @@ block content
               each itemOffer in listOffers
                 .comments__block
                   .comments__header
-                    a.announce-card(href="#")
+                    a.announce-card(href=`/offers/${itemOffer.id}`)
                       h2.announce-card__title #{itemOffer.title}
                       span.announce-card__info
                         span.announce-card__price ₽ #{itemOffer.cost}
