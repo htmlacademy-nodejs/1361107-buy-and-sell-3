@@ -13,6 +13,10 @@ searchRouter.get(
       const {user} = req.session;
       let {page, search} = req.query;
       page = Number(page) || 1;
+      const {count: freshOffersCount, rows: freshOffers} = await api.getOffers();
+      freshOffers.forEach((offer) => {
+        offer.cardColor = getCardColor();
+      });
       try {
         const {count, offers: results} = await api.search(search, page);
 
@@ -30,13 +34,17 @@ searchRouter.get(
           results,
           search,
           count,
-          user
+          user,
+          freshOffersCount,
+          freshOffers
         });
       } catch (error) {
         res.render(`search-result`, {
           results: [],
           search,
-          user
+          user,
+          freshOffersCount,
+          freshOffers
         });
       }
     })
