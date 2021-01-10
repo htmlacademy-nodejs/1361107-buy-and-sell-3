@@ -8,6 +8,7 @@ const loginRouter = require(`./routes/login-routes`);
 const myRouter = require(`./routes/my-routes`);
 const offersRouter = require(`./routes/offers-routes`);
 const searchRouter = require(`./routes/search-routes`);
+const logoutRouter = require(`./routes/logout-routes`);
 const {
   HttpCode,
   DirPath,
@@ -52,6 +53,7 @@ app.use(`/login`, loginRouter);
 app.use(`/my`, myRouter);
 app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
+app.use(`/logout`, logoutRouter);
 
 app.use((req, res) =>
   res.status(HttpCode.NOT_FOUND).render(`errors/400`, {
