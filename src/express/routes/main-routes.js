@@ -18,7 +18,6 @@ mainRouter.get(
         offer.cardColor = getCardColor();
       });
       discussedOffers.forEach((offer) => {
-        console.log(offer);
         offer.cardColor = getCardColor();
       });
       const categories = await api.getCategories();

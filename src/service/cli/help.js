@@ -1,11 +1,13 @@
 "use strict";
 
 const {HELP_MESSAGE} = require(`../../constants`);
-const chalk = require(`chalk`);
+const {getLogger} = require(`../lib/logger`);
+
+const logger = getLogger({name: `api`});
 
 module.exports = {
   name: `--help`,
   run() {
-    console.log(chalk.grey(HELP_MESSAGE));
+    logger.info(HELP_MESSAGE);
   },
 };

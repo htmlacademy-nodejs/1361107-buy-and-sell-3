@@ -8,7 +8,6 @@ const {
   SumRestrict,
   MAX_DESCR_SIZE,
 } = require(`../../constants`);
-const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {
   ExitCode,
@@ -18,6 +17,9 @@ const {
 } = require(`../../constants`);
 const {readContent, getRandomInt, shuffle, getPictureFileName, getCreatedDate} = require(`../../utils`);
 const {nanoid} = require(`nanoid`);
+const {getLogger} = require(`../lib/logger`);
+
+const logger = getLogger({name: `api`});
 
 const generateInsertQuery = (tableName, values) => {
   return `INSERT INTO ${tableName} VALUES ${values};`;
@@ -153,7 +155,7 @@ module.exports = {
     );
 
     if (count > MAX_OFFERS_NUMBER) {
-      console.log(chalk.red(`Не больше 1000 объявлений`));
+      logger.error(`Не больше 1000 объявлений`);
       process.exit(ExitCode.SUCCESS);
     }
 
@@ -170,10 +172,10 @@ module.exports = {
 
     try {
       await fs.writeFile(FILL_DB_FILE_NAME, data);
-      console.log(chalk.green(`Файл успешно создан`));
+      logger.info(`Файл успешно создан`);
       process.exit(ExitCode.SUCCESS);
     } catch (error) {
-      console.log(chalk.red(`Неудалось записать файл`));
+      logger.error(`Неудалось записать файл`);
       process.exit(ExitCode.ERROR);
     }
   },

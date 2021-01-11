@@ -1,8 +1,10 @@
 "use strict";
 
-const chalk = require(`chalk`);
 const {PictureRestrict} = require(`./constants`);
 const fs = require(`fs`).promises;
+const {getLogger} = require(`./service/lib/logger`);
+
+const logger = getLogger({name: `api`});
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -27,7 +29,7 @@ exports.readContent = async (fileName) => {
       .map((string) => string.replace(/(\r\n|\n|\r)/gm, ``));
     return content;
   } catch (error) {
-    console.log(chalk.red(`Не удалось прочитать файл с данными`));
+    logger.error(`Не удалось прочитать файл с данными`);
     return [];
   }
 };

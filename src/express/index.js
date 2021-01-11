@@ -15,10 +15,10 @@ const {
   ExitCode,
   ResponseMessage,
 } = require(`../constants`);
-const chalk = require(`chalk`);
 const config = require(`../config`);
 const {sequelize} = require(`../service/cli/server/db/db`);
 const session = require(`express-session`);
+const {getLogger} = require(`./lib/logger`);
 const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
 
 const mySessionStore = new SequelizeStore({
@@ -55,6 +55,8 @@ app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
 app.use(`/logout`, logoutRouter);
 
+const logger = getLogger({name: `front`});
+
 app.use((req, res) =>
   res.status(HttpCode.NOT_FOUND).render(`errors/400`, {
     statusCode: HttpCode.NOT_FOUND,
@@ -62,7 +64,7 @@ app.use((req, res) =>
   })
 );
 app.use((err, req, res, _next) => {
-  console.log(err);
+  logger.error(err);
   const statusCode = err.response
     ? err.response.status
     : HttpCode.INTERNAL_SERVER_ERROR;
@@ -76,9 +78,8 @@ app.use((err, req, res, _next) => {
 
 app.listen(config.FRONT_PORT, (err) => {
   if (err) {
-    console.log(chalk.red(`Неудалось запустить сервер`));
+    logger.error(`Failed to start server.`);
     process.exit(ExitCode.ERROR);
   }
-
-  console.log(chalk.gray(`Сервер запущен, порт: ${config.FRONT_PORT}`));
+  logger.info(`Server is running on port ${config.FRONT_PORT}`);
 });

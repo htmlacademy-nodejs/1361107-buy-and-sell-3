@@ -139,7 +139,6 @@ offersRouter.get(
     `/:offerId`,
     idValidator,
     catchAsync(async (req, res) => {
-      console.log(`lol`);
       const {user} = req.session;
       const {offerId} = req.params;
       const itemOffer = await api.getOffer(offerId);
@@ -181,7 +180,6 @@ offersRouter.get(
     catchAsync(async (req, res) => {
       const {user} = req.session;
       const {offerId, commentId} = req.params;
-      console.log(commentId, offerId);
       await api.deleteComment(offerId, commentId, user.email);
       res.status(204).send();
     })
