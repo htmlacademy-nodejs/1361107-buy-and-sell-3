@@ -196,7 +196,7 @@ offersRouter.post(
         description: body.description,
         typeId: body.typeId,
         cost: body.cost,
-        picture: file ? file.filename : `item01.jpg`,
+        picture: file ? file.filename : `blank.png`,
         categories: body.categories,
         userId: user.id,
       };

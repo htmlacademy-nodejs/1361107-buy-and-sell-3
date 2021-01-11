@@ -30,10 +30,10 @@ registerRouter.post(
     upload.single(`avatar`),
     catchAsync(async (req, res) => {
       const {body, file} = req;
-      const userData = {...body};
-      if (file) {
-        userData.avatar = file.filename;
-      }
+      const userData = {
+        ...body,
+        avatar: file ? file.filename : `avatar-d.jpg`
+      };
       try {
         await api.createUser(userData);
         res.redirect(`/login`);
