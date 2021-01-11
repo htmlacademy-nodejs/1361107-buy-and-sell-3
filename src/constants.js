@@ -20,9 +20,6 @@ exports.DataFileName = {
 
 exports.MAX_OFFERS_NUMBER = 1000;
 
-exports.NOT_FOUND_MESSAGE = `Not found.`;
-exports.SERVER_ERROR_MESSAGE = `Internal server error.`;
-
 exports.HttpCode = {
   OK: 200,
   CREATED: 201,
@@ -62,7 +59,19 @@ exports.ResponseMessage = {
   API_ROUTE_NOT_FOUND: `Route not found.`,
   PAGE_NOT_FOUND: `Page not found.`,
   BAD_REQUEST: `Invalid data.`,
-  FORBIDDEN: `This action is forbidden for you.`
+  FORBIDDEN: `This action is forbidden for you.`,
+  SERVER_ERROR_MESSAGE: `Internal server error.`
+};
+
+exports.UserErrorMessage = {
+  USER_NOT_EXISTS: `Пользователя не существует`,
+  WRONG_DATA: `Неверный email или пароль`,
+  FORBIDDEN: `У пользователя нет прав на данное действие`
+};
+
+exports.ServerMessage = {
+  START_ERROR: `Failed to start server:`,
+  START_SUCCESSFUL: `Server is running on port:`
 };
 
 exports.API_PREFIX = `/api`;
@@ -138,3 +147,5 @@ exports.NewUserMessage = {
 exports.SALT_ROUNDS = 10;
 
 exports.UPLOAD_DIR = `../upload/img/`;
+
+

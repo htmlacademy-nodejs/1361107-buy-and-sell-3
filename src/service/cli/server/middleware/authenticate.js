@@ -1,6 +1,6 @@
 "use strict";
 
-const {HttpCode} = require(`../../../../constants`);
+const {HttpCode, UserErrorMessage} = require(`../../../../constants`);
 const {AppError, catchAsync} = require(`../../../../utils`);
 const bcrypt = require(`bcrypt`);
 
@@ -13,11 +13,11 @@ module.exports = (service) =>
     if (!user) {
       return next(
           new AppError(
-              `Пользователя с таким email не существует`,
+              UserErrorMessage.USER_NOT_EXISTS,
               HttpCode.BAD_REQUEST,
               [
                 {
-                  message: `Пользователя с таким email не существует`,
+                  message: UserErrorMessage.USER_NOT_EXISTS,
                   context: {key: `email`},
                 },
               ]
@@ -29,9 +29,9 @@ module.exports = (service) =>
 
     if (!passwordMatch) {
       return next(
-          new AppError(`Неверный email или пароль`, HttpCode.BAD_REQUEST, [
+          new AppError(UserErrorMessage.WRONG_DATA, HttpCode.BAD_REQUEST, [
             {
-              message: `Неверный email или пароль`,
+              message: UserErrorMessage.WRONG_DATA,
               context: {key: `password`},
             },
           ])

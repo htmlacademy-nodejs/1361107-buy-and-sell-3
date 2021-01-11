@@ -1,6 +1,6 @@
 "use strict";
 
-const {HttpCode} = require(`../../../../constants`);
+const {HttpCode, UserErrorMessage} = require(`../../../../constants`);
 const {AppError, catchAsync} = require(`../../../../utils`);
 
 module.exports = (offersService) => catchAsync(async (req, res, next) => {
@@ -16,7 +16,7 @@ module.exports = (offersService) => catchAsync(async (req, res, next) => {
   const {userEmail} = req.query;
 
   if (userEmail !== offer.owner.email) {
-    return next(new AppError(`У пользователя нет прав на данное действие`, HttpCode.FORBIDDEN));
+    return next(new AppError(UserErrorMessage.FORBIDDEN, HttpCode.FORBIDDEN));
   }
 
   return next();

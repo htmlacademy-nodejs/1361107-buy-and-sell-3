@@ -11,7 +11,7 @@ const {
   getPageList,
   getCardColor,
 } = require(`../../utils`);
-const {PAGINATION_OFFSET, UPLOAD_DIR} = require(`../../constants`);
+const {PAGINATION_OFFSET, UPLOAD_DIR, HttpCode} = require(`../../constants`);
 const privateRoute = require(`../middleware/private-route`);
 const checkAuthorization = require(`../middleware/check-authorization`);
 const idValidator = require(`../../service/cli/server/middleware/id-validator`);
@@ -181,7 +181,7 @@ offersRouter.get(
       const {user} = req.session;
       const {offerId, commentId} = req.params;
       await api.deleteComment(offerId, commentId, user.email);
-      res.status(204).send();
+      res.status(HttpCode.NO_CONTENT).send();
     })
 );
 
@@ -226,7 +226,7 @@ offersRouter.get(
       const {user} = req.session;
       const {offerId} = req.params;
       await api.deleteOffer(offerId, user.email);
-      res.status(204).send();
+      res.status(HttpCode.NO_CONTENT).send();
     })
 );
 

@@ -14,6 +14,7 @@ const {
   DirPath,
   ExitCode,
   ResponseMessage,
+  ServerMessage,
 } = require(`../constants`);
 const config = require(`../config`);
 const {sequelize} = require(`../service/cli/server/db/db`);
@@ -78,8 +79,8 @@ app.use((err, req, res, _next) => {
 
 app.listen(config.FRONT_PORT, (err) => {
   if (err) {
-    logger.error(`Failed to start server.`);
+    logger.error(`${ServerMessage.START_ERROR} ${err.message}`);
     process.exit(ExitCode.ERROR);
   }
-  logger.info(`Server is running on port ${config.FRONT_PORT}`);
+  logger.info(`${ServerMessage.START_SUCCESSFUL} ${config.FRONT_PORT}`);
 });
