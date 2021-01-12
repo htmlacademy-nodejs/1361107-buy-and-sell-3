@@ -1,7 +1,7 @@
 "use strict";
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../../../constants`);
+const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 const offerExists = require(`../middleware/offer-exists`);
 const {catchAsync} = require(`../../../../utils`);
 const schemaValidator = require(`../middleware/schema-validator`);
@@ -39,6 +39,12 @@ module.exports = (app, services) => {
         const page = Number(req.query.page) || 1;
         const {userEmail} = req.query;
         const result = await offersService.findUserOffers(page, userEmail);
+
+        if (!result) {
+          return res
+          .status(HttpCode.NOT_FOUND)
+          .send(ResponseMessage.DATA_NOT_FOUND);
+        }
 
         return res.status(HttpCode.OK).json(result);
       })
@@ -128,7 +134,11 @@ module.exports = (app, services) => {
 
   route.delete(
       `/:offerId/comments/:commentId`,
-      [idValidator, offerExists(offersService), checkAuthorization(offersService)],
+      [
+        idValidator,
+        offerExists(offersService),
+        checkAuthorization(offersService),
+      ],
       catchAsync(async (req, res) => {
         const {offer} = res.locals;
         const {commentId} = req.params;

@@ -49,6 +49,10 @@ class OffersService {
       attributes: []
     });
 
+    if (!result) {
+      return null;
+    }
+
     const offerIdList = result.offers.map((offer) => offer.id);
 
     return await this._db.Offer.findAndCountAll({
