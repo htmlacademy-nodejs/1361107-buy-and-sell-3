@@ -41,17 +41,17 @@ block content
                     each pageNumber of pageList
                       li
                         a(href=`/search?search=${search}&page=${pageNumber}`, class={active: page === pageNumber}, style=`${page === pageNumber ? "pointer-events: none" : ""}`) #{pageNumber}
-                    li
-                      a(href=`/search?search=${search}&page=${page === maxPage ? maxPage : page + 1}`) >
-                    li
-                      a(href=`/search?search=${search}&page=${maxPage}`) >>
+                      li
+                        a(href=`/search?search=${search}&page=${page === maxPage ? maxPage : page + 1}`) >
+                      li
+                        a(href=`/search?search=${search}&page=${maxPage}`) >>
     section.tickets-list
       h2.visually-hidden Самые новые предложения
       .tickets-list__wrapper
         .tickets-list__header
           p.tickets-list__title Самое свежее
-          a.tickets-list__link(href='/') #{discussedOffers.length !== 0 ? `Еще ${freshOffersCount}` : ''}
-        if discussedOffers.length !== 0
+          a.tickets-list__link(href='/') #{freshOffers.length !== 0 ? `Еще ${freshOffersCount}` : ''}
+        if freshOffers.length !== 0
           ul
             each itemOffer in freshOffers
               li.search-results__item
@@ -72,7 +72,7 @@ block content
                     .ticket-card__desc
                       p #{itemOffer.description}
         else
-            .message
-              .message__text
-                p Здесь пока ничего нет.
+          .message
+            .message__text
+              p Здесь пока ничего нет.
           

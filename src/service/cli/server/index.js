@@ -59,7 +59,7 @@ module.exports = {
         process.exit(ExitCode.ERROR);
       }
 
-      logger.info(`${ServerMessage.START_SUCCESSFUL} ${config.FRONT_PORT}`);
+      logger.info(`${ServerMessage.START_SUCCESSFUL} ${config.API_PORT}`);
     });
   },
 };
