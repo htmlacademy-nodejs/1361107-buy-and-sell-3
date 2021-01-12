@@ -36,6 +36,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   name: `session_id`,
+  cookie: {
+    sameSite: `strict`
+  }
 }));
 
 (async () => {
