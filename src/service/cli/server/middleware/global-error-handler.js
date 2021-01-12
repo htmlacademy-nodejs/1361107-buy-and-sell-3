@@ -1,5 +1,6 @@
 "use strict";
 
+const config = require(`../../../../config`);
 const {HttpCode, DBErrorName, Env} = require(`../../../../constants`);
 const {AppError} = require(`../../../../utils`);
 const {getLogger} = require(`../../../lib/logger`);
@@ -46,11 +47,11 @@ module.exports = (err, req, res) => {
 
   logger.error(`An error occured: ${err}`);
 
-  if (process.env.NODE_ENV === Env.DEVELOPMENT) {
+  if (config.NODE_ENV === Env.DEVELOPMENT) {
     sendErrorDev(err, res);
     return;
   }
-  if (process.env.NODE_ENV === Env.PRODUCTION) {
+  if (config.NODE_ENV === Env.PRODUCTION) {
     let error = {...err, message: err.message};
 
     switch (error.name) {
