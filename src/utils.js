@@ -160,6 +160,7 @@ exports.getSequelizeQueryOptions = (model, db) => {
           }
         },
       ],
+      order: [[`createdAt`, `DESC`], [{model: db.Comment, as: `comments`}, `createdAt`, `DESC`]]
     },
     Comment: {
       attributes: {exclude: [`userId`]},
@@ -168,6 +169,7 @@ exports.getSequelizeQueryOptions = (model, db) => {
         as: `user`,
         attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`],
       },
+      order: [[`createdAt`, `DESC`]]
     },
     User: {
       attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`],
