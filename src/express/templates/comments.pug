@@ -5,22 +5,48 @@ block content
     section.comments
       .comments__wrapper
         h1.visually-hidden Страница комментариев
-        each itemOffer in listOffers
-          .comments__block
-            .comments__header
-              a.announce-card(href="#")
-                h2.announce-card__title #{itemOffer.title}
-                span.announce-card__info
-                  span.announce-card__price ₽ #{itemOffer.cost}
-                  +ticketLabel(itemOffer.type)(class=`announce-card__type`)
-            ul.comments-list
-              each comment in itemOffer.comments
-                li.js-card
-                  .comment-card
-                    .comment-card__header
-                      a.comment-card__avatar.avatar(href="#")
-                        img(src="/img/avatar03.jpg" srcset="/img/avatar03@2x.jpg 2x" alt="Аватар пользователя")
-                      p.comment-card__author #{comment.user.firstName} #{comment.user.lastName}
-                    .comment-card__content
-                      p #{comment.text}
-                    button.comment-card__delete.js-delete(type="button") Удалить
+        if maxPage !== 0
+          if listOffers.length === 0
+            .message
+              .message__text
+                p Ничего не найдено
+          else
+            ul
+              each itemOffer in listOffers
+                .comments__block
+                  .comments__header
+                    a.announce-card(href=`/offers/${itemOffer.id}`)
+                      h2.announce-card__title #{itemOffer.title}
+                      span.announce-card__info
+                        span.announce-card__price ₽ #{itemOffer.cost}
+                        +ticketLabel(itemOffer.type)(class=`announce-card__type`)
+                  ul.comments-list
+                    each comment in itemOffer.comments
+                      li.js-card
+                        .comment-card
+                          .comment-card__header
+                            a.comment-card__avatar.avatar(href="#")
+                              img(src=`/img/${comment.user.avatar}` srcset="/img/avatar03@2x.jpg 2x" alt="Аватар пользователя")
+                            p.comment-card__author #{comment.user.firstName} #{comment.user.lastName}
+                          .comment-card__content
+                            p #{comment.text}
+                          a.comment-card__delete.js-delete(href=`/offers/${itemOffer.id}/delete-comment/${comment.id}`) Удалить
+            if pageList.length > 1 && listOffers.length !== 0
+              .tickets-list__pagination
+                ul.pagination
+                  li
+                    a(href="/my/comments?page=1") <<
+                  li
+                    a(href=`/my/comments?page=${page === 1 ? 1 : page - 1}`) <
+                  each pageNumber of pageList
+                    li
+                      a(href=`/my/comments?page=${pageNumber}`, class={active: page === pageNumber}, style=`${page === pageNumber ? "pointer-events: none" : ""}`) #{pageNumber}
+                  li
+                    a(href=`/my/comments?page=${page === maxPage ? maxPage : page + 1}`) >
+                  li
+                    a(href=`/my/comments?page=${maxPage}`) >>
+        else
+          .message
+            .message__text
+              p У вас еще не опубликовано ни одного объявления.
+        

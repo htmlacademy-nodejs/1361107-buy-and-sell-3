@@ -21,6 +21,7 @@ offers(app, {
   offersService: new OffersService(db),
   commentsService: new CommentsService(db),
   categoryService: new CategoryService(db),
+  usersService: new UsersService(db)
 });
 search(app, new SearchService(db));
 users(app, new UsersService(db));

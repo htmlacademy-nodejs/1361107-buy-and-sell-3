@@ -29,12 +29,17 @@ describe(`/user route works correctly:`, () => {
     email: `email@mail.com`,
   };
 
-  describe(`/user POST request`, () => {
+  const loginData = {
+    email: `email0@mail.ru`,
+    password: `password`,
+  };
+
+  describe(`/user/signup POST request`, () => {
     let response;
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).post(`/user`).send(mockNewUser);
+      response = await request(app).post(`/user/signup`).send(mockNewUser);
     });
 
     test(`returns 200 status code`, () => {
@@ -46,8 +51,7 @@ describe(`/user route works correctly:`, () => {
     });
   });
 
-  describe(`/user wrong POST request`, () => {
-
+  describe(`/user/signup wrong POST request`, () => {
     beforeEach(async () => {
       await initAndFillMockDb();
     });
@@ -56,9 +60,59 @@ describe(`/user route works correctly:`, () => {
       for (const key of Object.keys(mockNewUser)) {
         const badUser = {...mockNewUser};
         delete badUser[key];
-        const badResponse = await request(app).post(`/user`).send(badUser);
+        const badResponse = await request(app)
+          .post(`/user/signup`)
+          .send(badUser);
         expect(badResponse.statusCode).toBe(HttpCode.BAD_REQUEST);
       }
+    });
+  });
+
+  describe(`/user/login POST request`, () => {
+    let response;
+
+    beforeEach(async () => {
+      await initAndFillMockDb();
+      response = await request(app).post(`/user/login`).send(loginData);
+    });
+
+    test(`returns 200 status code`, () => {
+      expect(response.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`returns correct user data`, () => {
+      expect(response.body.email).toBe(loginData.email);
+    });
+  });
+
+  describe(`/user/login wrong POST request`, () => {
+    beforeEach(async () => {
+      await initAndFillMockDb();
+    });
+
+    test(`returns 400 status code if data is not correct`, async () => {
+      for (const key of Object.keys(loginData)) {
+        const badLoginData = {...loginData};
+        delete badLoginData[key];
+        const badResponse = await request(app)
+          .post(`/user/login`)
+          .send(badLoginData);
+        expect(badResponse.statusCode).toBe(HttpCode.BAD_REQUEST);
+      }
+    });
+
+    test(`returns 400 status code if user does not exists`, async () => {
+      const response = await request(app)
+        .post(`/user/login`)
+        .send({...loginData, email: `wrongEmail@mail.ru`});
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`returns 400 status code if password is incorrect`, async () => {
+      const response = await request(app)
+        .post(`/user/login`)
+        .send({...loginData, password: `wrong-password`});
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
     });
   });
 });

@@ -1,8 +1,10 @@
 "use strict";
 
-const chalk = require(`chalk`);
 const {PictureRestrict} = require(`./constants`);
 const fs = require(`fs`).promises;
+const {getLogger} = require(`./service/lib/logger`);
+
+const logger = getLogger({name: `api`});
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -27,7 +29,7 @@ exports.readContent = async (fileName) => {
       .map((string) => string.replace(/(\r\n|\n|\r)/gm, ``));
     return content;
   } catch (error) {
-    console.log(chalk.red(`Не удалось прочитать файл с данными`));
+    logger.error(`Не удалось прочитать файл с данными`);
     return [];
   }
 };
@@ -147,7 +149,7 @@ exports.getSequelizeQueryOptions = (model, db) => {
           include: {
             model: db.User,
             as: `user`,
-            attributes: [`id`, `firstName`, `lastName`, `email`],
+            attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`],
           },
         },
         {
@@ -158,15 +160,25 @@ exports.getSequelizeQueryOptions = (model, db) => {
           }
         },
       ],
+      order: [[`createdAt`, `DESC`], [{model: db.Comment, as: `comments`}, `createdAt`, `DESC`]]
     },
     Comment: {
       attributes: {exclude: [`userId`]},
       include: {
         model: db.User,
         as: `user`,
-        attributes: [`id`, `firstName`, `lastName`, `email`],
+        attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`],
       },
+      order: [[`createdAt`, `DESC`]]
     },
+    User: {
+      attributes: [`id`, `firstName`, `lastName`, `email`, `avatar`],
+      include: {
+        model: db.Offer,
+        as: `offers`,
+        attributes: [`id`]
+      }
+    }
   };
 
   return options[model];
@@ -186,3 +198,5 @@ exports.formatDate = (date) => {
 
   return `${day}.${month}.${year}, ${hours}:${minutes}`;
 };
+
+exports.getAvatar = () => `avatar0${getRandomInt(1, 5)}.jpg`;

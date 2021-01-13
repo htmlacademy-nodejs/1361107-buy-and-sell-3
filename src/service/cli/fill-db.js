@@ -1,25 +1,27 @@
 "use strict";
 
-const {nanoid} = require(`nanoid`);
 const {
   ExitCode,
   MAX_OFFERS_NUMBER,
   DEFAULT_OFFER_AMOUNT,
   DataFileName,
-  MAX_ID_LENGTH,
   OfferType,
   MAX_DESCR_SIZE,
   SumRestrict,
   CommentRestrict,
+  SALT_ROUNDS,
 } = require(`../../constants`);
 const {
   readContent,
   shuffle,
   getRandomInt,
   getPictureFileName,
+  getAvatar,
 } = require(`../../utils`);
 const {getLogger} = require(`../lib/logger`);
 const {db, sequelize} = require(`./server/db/db`);
+const bcrypt = require(`bcrypt`);
+
 const logger = getLogger({name: `database`});
 
 module.exports = {
@@ -53,14 +55,15 @@ module.exports = {
 
     const userList = Array(count)
       .fill({}, 0, count)
-      .map(() => {
+      .map((_el, index) => {
         return {
           firstName: shuffle(firstNames)[
             getRandomInt(0, firstNames.length - 1)
           ],
           lastName: shuffle(lastNames)[getRandomInt(0, firstNames.length - 1)],
-          email: `${nanoid(MAX_ID_LENGTH)}@mail.ru`,
-          password: `password`,
+          email: `email${index}@mail.ru`,
+          password: bcrypt.hashSync(`password`, SALT_ROUNDS),
+          avatar: getAvatar(),
         };
       });
 

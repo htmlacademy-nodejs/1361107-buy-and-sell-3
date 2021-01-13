@@ -6,6 +6,7 @@ const path = require(`path`);
 const {UPLOAD_DIR, NewUserMessage} = require(`../../constants`);
 const {nanoid} = require(`nanoid`);
 const {catchAsync} = require(`../../utils`);
+const alreadyRegistered = require(`../middleware/already-registered`);
 const api = require(`../api`).getAPI();
 
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
@@ -22,17 +23,17 @@ const upload = multer({storage});
 
 const registerRouter = new Router();
 
-registerRouter.get(`/`, (req, res) => res.render(`sign-up`));
+registerRouter.get(`/`, alreadyRegistered, (req, res) => res.render(`sign-up`));
 
 registerRouter.post(
     `/`,
     upload.single(`avatar`),
     catchAsync(async (req, res) => {
       const {body, file} = req;
-      const userData = {...body};
-      if (file) {
-        userData.avatar = file.filename;
-      }
+      const userData = {
+        ...body,
+        avatar: file ? file.filename : `avatar-d.jpg`
+      };
       try {
         await api.createUser(userData);
         res.redirect(`/login`);

@@ -7,6 +7,7 @@ const {
   HttpCode,
   ResponseMessage,
   API_PREFIX,
+  ServerMessage,
 } = require(`../../../constants`);
 const {getLogger} = require(`../../lib/logger`);
 const routes = require(`./api`);
@@ -54,11 +55,11 @@ module.exports = {
 
     app.listen(port, (err) => {
       if (err) {
-        logger.error(`An error occured on server creation: ${err.message}`);
+        logger.error(`${ServerMessage.START_ERROR} ${err.message}`);
         process.exit(ExitCode.ERROR);
       }
 
-      logger.info(`Listening to connections on ${port}`);
+      logger.info(`${ServerMessage.START_SUCCESSFUL} ${config.API_PORT}`);
     });
   },
 };

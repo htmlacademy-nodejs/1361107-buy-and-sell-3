@@ -1,7 +1,7 @@
 "use strict";
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../../../constants`);
+const {HttpCode, ResponseMessage} = require(`../../../../constants`);
 const offerExists = require(`../middleware/offer-exists`);
 const {catchAsync} = require(`../../../../utils`);
 const schemaValidator = require(`../middleware/schema-validator`);
@@ -10,9 +10,16 @@ const newCommentSchema = require(`../schemas/new-comment`);
 const updateOfferSchema = require(`../schemas/update-offer`);
 const idValidator = require(`../middleware/id-validator`);
 const isCategoryExists = require(`../middleware/is-category-exists`);
+const isUserExists = require(`../middleware/is-user-exists`);
+const checkAuthorization = require(`../middleware/check-authorization`);
 
 module.exports = (app, services) => {
-  const {offersService, commentsService, categoryService} = services;
+  const {
+    offersService,
+    commentsService,
+    categoryService,
+    usersService,
+  } = services;
 
   const route = new Router();
 
@@ -21,6 +28,23 @@ module.exports = (app, services) => {
       catchAsync(async (req, res) => {
         const page = Number(req.query.page) || 1;
         const result = await offersService.findAll(page);
+
+        return res.status(HttpCode.OK).json(result);
+      })
+  );
+
+  route.get(
+      `/my`,
+      catchAsync(async (req, res) => {
+        const page = Number(req.query.page) || 1;
+        const {userEmail} = req.query;
+        const result = await offersService.findUserOffers(page, userEmail);
+
+        if (!result) {
+          return res
+          .status(HttpCode.NOT_FOUND)
+          .send(ResponseMessage.DATA_NOT_FOUND);
+        }
 
         return res.status(HttpCode.OK).json(result);
       })
@@ -38,15 +62,29 @@ module.exports = (app, services) => {
       })
   );
 
-  route.get(`/:offerId`, [idValidator, offerExists(offersService)], (req, res) => {
-    const {offer} = res.locals;
+  route.get(
+      `/discussed`,
+      catchAsync(async (req, res) => {
+        const result = await offersService.getDiscussed();
 
-    return res.status(HttpCode.OK).json(offer);
-  });
+        return res.status(HttpCode.OK).json(result);
+      })
+  );
+
+  route.get(
+      `/:offerId`,
+      [idValidator, offerExists(offersService)],
+      (req, res) => {
+        const {offer} = res.locals;
+
+        return res.status(HttpCode.OK).json(offer);
+      }
+  );
 
   route.post(
       `/`,
       schemaValidator(newOfferSchema),
+      isUserExists(usersService),
       catchAsync(async (req, res) => {
         const newOffer = await offersService.create(req.body);
 
@@ -56,7 +94,12 @@ module.exports = (app, services) => {
 
   route.put(
       `/:offerId`,
-      [idValidator, offerExists(offersService), schemaValidator(updateOfferSchema)],
+      [
+        idValidator,
+        schemaValidator(updateOfferSchema),
+        offerExists(offersService),
+        checkAuthorization(offersService),
+      ],
       catchAsync(async (req, res) => {
         const {offerId} = req.params;
 
@@ -68,7 +111,7 @@ module.exports = (app, services) => {
 
   route.delete(
       `/:offerId`,
-      idValidator,
+      [idValidator, checkAuthorization(offersService)],
       catchAsync(async (req, res) => {
         const {offerId} = req.params;
 
@@ -91,7 +134,11 @@ module.exports = (app, services) => {
 
   route.delete(
       `/:offerId/comments/:commentId`,
-      [idValidator, offerExists(offersService)],
+      [
+        idValidator,
+        offerExists(offersService),
+        checkAuthorization(offersService),
+      ],
       catchAsync(async (req, res) => {
         const {offer} = res.locals;
         const {commentId} = req.params;
@@ -104,7 +151,12 @@ module.exports = (app, services) => {
 
   route.post(
       `/:offerId/comments`,
-      [idValidator, offerExists(offersService), schemaValidator(newCommentSchema)],
+      [
+        idValidator,
+        offerExists(offersService),
+        schemaValidator(newCommentSchema),
+        isUserExists(usersService),
+      ],
       catchAsync(async (req, res) => {
         const {offer} = res.locals;
         const newComment = await commentsService.create(offer, req.body);

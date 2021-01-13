@@ -98,32 +98,32 @@ const initAndFillMockDb = async () => {
       {
         "firstName": `Николай`,
         "lastName": `Бурундуков`,
-        "email": `Gy3Qbn@mail.ru`,
-        "password": `password`
+        "email": `email0@mail.ru`,
+        "password": `$2b$10$oz/YlcqYWoXKQv38L0kmc..eMwp0FxTe2ssYoQAS9SJzXHiaoD2pK`
       },
       {
         "firstName": `Айдар`,
         "lastName": `Бурундуков`,
-        "email": `RYWP3o@mail.ru`,
-        "password": `password`
+        "email": `email1@mail.ru`,
+        "password": `$2b$10$oz/YlcqYWoXKQv38L0kmc..eMwp0FxTe2ssYoQAS9SJzXHiaoD2pK`
       },
       {
         "firstName": `Григорий`,
         "lastName": `Бурундуков`,
-        "email": `LyCBu6@mail.ru`,
-        "password": `password`
+        "email": `email2@mail.ru`,
+        "password": `$2b$10$oz/YlcqYWoXKQv38L0kmc..eMwp0FxTe2ssYoQAS9SJzXHiaoD2pK`
       },
       {
         "firstName": `Айдар`,
         "lastName": `Бурундуков`,
-        "email": `Ko4MkZ@mail.ru`,
-        "password": `password`
+        "email": `email3@mail.ru`,
+        "password": `$2b$10$oz/YlcqYWoXKQv38L0kmc..eMwp0FxTe2ssYoQAS9SJzXHiaoD2pK`
       },
       {
         "firstName": `Евгений`,
         "lastName": `Пивоваров`,
-        "email": `7RmPIW@mail.ru`,
-        "password": `password`
+        "email": `email4@mail.ru`,
+        "password": `$2b$10$oz/YlcqYWoXKQv38L0kmc..eMwp0FxTe2ssYoQAS9SJzXHiaoD2pK`
       }
     ],
     "offerTypeList": [{"name": `offer`}, {"name": `sale`}],
@@ -133,7 +133,7 @@ const initAndFillMockDb = async () => {
         "picture": `item13.jpg`,
         "description": `Если товар не понравится — верну всё до последней копейки.`,
         "cost": 66314,
-        "userId": 3,
+        "userId": 1,
         "typeId": 2
       },
       {
@@ -141,7 +141,7 @@ const initAndFillMockDb = async () => {
         "picture": `item02.jpg`,
         "description": `Если найдёте дешевле — сброшу цену. Таких предложений больше нет! Пользовались бережно и только по большим праздникам.`,
         "cost": 59494,
-        "userId": 2,
+        "userId": 1,
         "typeId": 1
       },
       {
@@ -149,7 +149,7 @@ const initAndFillMockDb = async () => {
         "picture": `item07.jpg`,
         "description": `Товар в отличном состоянии. Бонусом отдам все аксессуары. Продаю с болью в сердце...`,
         "cost": 45284,
-        "userId": 2,
+        "userId": 1,
         "typeId": 1
       },
       {
@@ -157,7 +157,7 @@ const initAndFillMockDb = async () => {
         "picture": `item07.jpg`,
         "description": `Пользовались бережно и только по большим праздникам. Таких предложений больше нет! Даю недельную гарантию. Кажется, что это хрупкая вещь. Если найдёте дешевле — сброшу цену.`,
         "cost": 23817,
-        "userId": 3,
+        "userId": 1,
         "typeId": 2
       },
       {
@@ -171,17 +171,17 @@ const initAndFillMockDb = async () => {
     ],
     "commentList": [
       {
-        "userId": 5,
+        "userId": 1,
         "offerId": 1,
         "text": `Неплохо, но дорого. А сколько игр в комплекте?`
       },
       {
-        "userId": 4,
+        "userId": 1,
         "offerId": 1,
         "text": `Вы что?! В магазине дешевле. А где блок питания? А сколько игр в комплекте?`
       },
       {
-        "userId": 4,
+        "userId": 1,
         "offerId": 2,
         "text": `А сколько игр в комплекте? Продаю в связи с переездом. Отрываю от сердца.`
       },
@@ -196,7 +196,7 @@ const initAndFillMockDb = async () => {
         "text": `А где блок питания? Продаю в связи с переездом. Отрываю от сердца.`
       },
       {
-        "userId": 5,
+        "userId": 1,
         "offerId": 3,
         "text": `А сколько игр в комплекте? Совсем немного...`
       },
@@ -206,16 +206,16 @@ const initAndFillMockDb = async () => {
         "text": `Продаю в связи с переездом. Отрываю от сердца.`
       },
       {
-        "userId": 4,
+        "userId": 1,
         "offerId": 4,
         "text": `А где блок питания? Почему в таком ужасном состоянии?`
       },
       {
-        "userId": 2,
+        "userId": 1,
         "offerId": 5,
         "text": `Вы что?! В магазине дешевле. Продаю в связи с переездом. Отрываю от сердца.`
       },
-      {"userId": 2, "offerId": 5, "text": `Неплохо, но дорого.`}
+      {"userId": 1, "offerId": 5, "text": `Неплохо, но дорого.`}
     ]
   };
 

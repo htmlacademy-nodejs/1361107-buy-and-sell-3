@@ -8,16 +8,42 @@ const loginRouter = require(`./routes/login-routes`);
 const myRouter = require(`./routes/my-routes`);
 const offersRouter = require(`./routes/offers-routes`);
 const searchRouter = require(`./routes/search-routes`);
+const logoutRouter = require(`./routes/logout-routes`);
 const {
   HttpCode,
   DirPath,
   ExitCode,
   ResponseMessage,
+  ServerMessage,
 } = require(`../constants`);
-const chalk = require(`chalk`);
 const config = require(`../config`);
+const {sequelize} = require(`../service/cli/server/db/db`);
+const session = require(`express-session`);
+const {getLogger} = require(`./lib/logger`);
+const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
+
+const mySessionStore = new SequelizeStore({
+  db: sequelize,
+  expiration: 1800000,
+  checkExpirationInterval: 60000,
+});
 
 const app = express();
+
+app.use(session({
+  secret: config.SESSION_SECRET,
+  store: mySessionStore,
+  resave: false,
+  saveUninitialized: false,
+  name: `session_id`,
+  cookie: {
+    sameSite: `strict`
+  }
+}));
+
+(async () => {
+  await sequelize.sync({force: false});
+})();
 
 app.use(express.static(path.resolve(__dirname, DirPath.PUBLIC)));
 app.use(express.static(path.resolve(__dirname, DirPath.UPDATE)));
@@ -31,6 +57,9 @@ app.use(`/login`, loginRouter);
 app.use(`/my`, myRouter);
 app.use(`/offers`, offersRouter);
 app.use(`/search`, searchRouter);
+app.use(`/logout`, logoutRouter);
+
+const logger = getLogger({name: `front`});
 
 app.use((req, res) =>
   res.status(HttpCode.NOT_FOUND).render(`errors/400`, {
@@ -39,7 +68,7 @@ app.use((req, res) =>
   })
 );
 app.use((err, req, res, _next) => {
-  console.log(err);
+  logger.error(err);
   const statusCode = err.response
     ? err.response.status
     : HttpCode.INTERNAL_SERVER_ERROR;
@@ -53,9 +82,8 @@ app.use((err, req, res, _next) => {
 
 app.listen(config.FRONT_PORT, (err) => {
   if (err) {
-    console.log(chalk.red(`Неудалось запустить сервер`));
+    logger.error(`${ServerMessage.START_ERROR} ${err.message}`);
     process.exit(ExitCode.ERROR);
   }
-
-  console.log(chalk.gray(`Сервер запущен, порт: ${config.FRONT_PORT}`));
+  logger.info(`${ServerMessage.START_SUCCESSFUL} ${config.FRONT_PORT}`);
 });

@@ -2,25 +2,53 @@
 
 const {Router} = require(`express`);
 const {PAGINATION_OFFSET} = require(`../../constants`);
-const {getCardColor, getPageList} = require(`../../utils`);
+const {getCardColor, getPageList, catchAsync} = require(`../../utils`);
+const privateRoute = require(`../middleware/private-route`);
 const api = require(`../api`).getAPI();
 
 const myRouter = new Router();
 
-myRouter.get(`/`, async (req, res) => {
-  const page = Number(req.query.page) || 1;
-  const {count, rows: listOffers} = await api.getOffers(page);
-  listOffers.forEach((offer) => {
-    offer.cardColor = getCardColor();
-  });
-  const maxPage = Math.ceil(count / PAGINATION_OFFSET);
-  const pageList = getPageList(page, maxPage);
-  res.render(`my-tickets`, {page, maxPage, pageList, listOffers});
-});
+myRouter.get(
+    `/`,
+    privateRoute,
+    catchAsync(async (req, res) => {
+      const {user} = req.session;
+      const page = Number(req.query.page) || 1;
+      const {count, rows: listOffers} = await api.getMyOffers(page, user.email);
+      listOffers.forEach((offer) => {
+        offer.cardColor = getCardColor();
+      });
+      const maxPage = Math.ceil(count / PAGINATION_OFFSET);
+      const pageList = getPageList(page, maxPage);
+      res.render(`my-tickets`, {
+        page,
+        maxPage,
+        pageList,
+        listOffers,
+        user,
+        navPage: `offers`,
+      });
+    })
+);
 
-myRouter.get(`/comments`, async (req, res) => {
-  const listOffers = await api.getOffers();
-  res.render(`comments`, {listOffers: listOffers.slice(0, 3)});
-});
+myRouter.get(
+    `/comments`,
+    privateRoute,
+    catchAsync(async (req, res) => {
+      const {user} = req.session;
+      const page = Number(req.query.page) || 1;
+      const {count, rows: listOffers} = await api.getMyOffers(page, user.email);
+      const maxPage = Math.ceil(count / PAGINATION_OFFSET);
+      const pageList = getPageList(page, maxPage);
+      res.render(`comments`, {
+        listOffers: listOffers.slice(0, 3),
+        user,
+        navPage: `comments`,
+        page,
+        maxPage,
+        pageList
+      });
+    })
+);
 
 module.exports = myRouter;

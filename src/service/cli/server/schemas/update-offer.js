@@ -16,8 +16,9 @@ module.exports = Joi.object({
     "number.min": NewOfferMessage.MIN_COST_NUMBER,
   }),
   picture: Joi.string().label(`Фото`),
-  categories: Joi.array().label(`Категории`).items(Joi.number()).messages({
+  categories: Joi.array().label(`Категории`).items(Joi.number()).min(1).messages({
     "number.base": NewOfferMessage.WRONG_CATEGORY,
+    "array.min": NewOfferMessage.MIN_CATEGORY_ARRAY_LENGTH
   }),
   typeId: Joi.number()
     .label(`Тип объявления`)

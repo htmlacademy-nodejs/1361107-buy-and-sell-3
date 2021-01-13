@@ -6,7 +6,12 @@ const request = require(`supertest`);
 const offers = require(`./offers`);
 const {HttpCode} = require(`../../../../constants`);
 const {mockDb, initAndFillMockDb, sequelize} = require(`../db/mock-db`);
-const {OffersService, CategoryService, CommentsService} = require(`../data-service`);
+const {
+  OffersService,
+  CategoryService,
+  CommentsService,
+  UsersService,
+} = require(`../data-service`);
 
 const app = express();
 
@@ -15,6 +20,7 @@ offers(app, {
   offersService: new OffersService(mockDb),
   commentsService: new CommentsService(mockDb),
   categoryService: new CategoryService(mockDb),
+  usersService: new UsersService(mockDb),
 });
 
 describe(`/offers route works correctly:`, () => {
@@ -174,6 +180,13 @@ describe(`/offers route works correctly:`, () => {
         expect(badResponse.statusCode).toBe(HttpCode.BAD_REQUEST);
       }
     });
+
+    test(`returns 400 status code if userId is not exists`, async () => {
+      const response = await request(app)
+        .post(`/offers`)
+        .send({...mockNewOffer, userId: 3000});
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
   });
 
   describe(`/offers/:offerId PUT request`, () => {
@@ -181,7 +194,9 @@ describe(`/offers route works correctly:`, () => {
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).put(`/offers/1`).send(updateOfferData);
+      response = await request(app)
+        .put(`/offers/1?userEmail=email0@mail.ru`)
+        .send(updateOfferData);
     });
 
     test(`returns 200 status code`, () =>
@@ -224,6 +239,13 @@ describe(`/offers route works correctly:`, () => {
         expect(badResponse.statusCode).toBe(HttpCode.BAD_REQUEST);
       }
     });
+
+    test(`returns 403 status code if email is wrong`, async () => {
+      response = await request(app)
+        .put(`/offers/1?userEmail=email3000@mail.ru`)
+        .send(updateOfferData);
+      expect(response.statusCode).toBe(HttpCode.FORBIDDEN);
+    });
   });
 
   describe(`/offers/:offerId DELETE request`, () => {
@@ -231,7 +253,9 @@ describe(`/offers route works correctly:`, () => {
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).delete(`/offers/1`);
+      response = await request(app).delete(
+          `/offers/1?userEmail=email0@mail.ru`
+      );
     });
 
     test(`returns 204 status code`, () =>
@@ -258,6 +282,13 @@ describe(`/offers route works correctly:`, () => {
     test(`returns 404 status code if offer id is invalid`, async () => {
       response = await request(app).delete(`/offers/invalid-id`);
       expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`returns 403 status code if email is wrong`, async () => {
+      response = await request(app).delete(
+          `/offers/1?userEmail=email3000@mail.ru`
+      );
+      expect(response.statusCode).toBe(HttpCode.FORBIDDEN);
     });
   });
 
@@ -313,7 +344,7 @@ describe(`/offers route works correctly:`, () => {
           `/offers/1/comments`
       );
 
-      expect(responseAfterCreation.body[2].text).toBe(
+      expect(responseAfterCreation.body[0].text).toBe(
           `Новый комментарий, очень крутой комментарий!`
       );
     });
@@ -353,7 +384,9 @@ describe(`/offers route works correctly:`, () => {
 
     beforeEach(async () => {
       await initAndFillMockDb();
-      response = await request(app).delete(`/offers/1/comments/1`);
+      response = await request(app).delete(
+          `/offers/1/comments/1?userEmail=email0@mail.ru`
+      );
     });
 
     test(`returns 204 status code`, () =>
@@ -380,7 +413,9 @@ describe(`/offers route works correctly:`, () => {
     });
 
     test(`returns 204 status code if a comment does not exist`, async () => {
-      response = await request(app).delete(`/offers/1/comments/999`);
+      response = await request(app).delete(
+          `/offers/1/comments/999?userEmail=email0@mail.ru`
+      );
       expect(response.statusCode).toBe(HttpCode.NO_CONTENT);
     });
 
@@ -392,6 +427,13 @@ describe(`/offers route works correctly:`, () => {
     test(`returns 400 status code if commentId is invalid`, async () => {
       response = await request(app).delete(`/offers/1/comments/invalid-id`);
       expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`returns 403 status code if email is wrong`, async () => {
+      response = await request(app).delete(
+          `/offers/1/comments/1?userEmail=email3000@mail.ru`
+      );
+      expect(response.statusCode).toBe(HttpCode.FORBIDDEN);
     });
   });
 });

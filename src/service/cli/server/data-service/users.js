@@ -2,6 +2,7 @@
 
 const bcrypt = require(`bcrypt`);
 const {SALT_ROUNDS} = require(`../../../../constants`);
+const {getSequelizeQueryOptions} = require(`../../../../utils`);
 
 class UsersService {
   constructor(db) {
@@ -13,6 +14,28 @@ class UsersService {
     const newUser = await this._db.User.create({...userData, password: hash});
 
     return newUser;
+  }
+
+  async findOne(id) {
+    return await this._db.User.findByPk(
+        id,
+        getSequelizeQueryOptions(`User`, this._db)
+    );
+  }
+
+  async findByEmail(email) {
+    return await this._db.User.findOne({
+      ...getSequelizeQueryOptions(`User`, this._db),
+      attributes: [
+        `id`,
+        `firstName`,
+        `lastName`,
+        `email`,
+        `password`,
+        `avatar`,
+      ],
+      where: {email},
+    });
   }
 }
 

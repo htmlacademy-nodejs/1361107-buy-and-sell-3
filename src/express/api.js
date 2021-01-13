@@ -20,8 +20,16 @@ class API {
     return this._load(`/offers`, {params: {page}});
   }
 
+  async getDicussedOffers() {
+    return this._load(`/offers/discussed`);
+  }
+
   async getOffersByCategory(page, categoryId) {
     return this._load(`/offers/category/${categoryId}`, {params: {page}});
+  }
+
+  async getMyOffers(page, userEmail) {
+    return this._load(`/offers/my`, {params: {page, userEmail}});
   }
 
   async getOffer(id) {
@@ -58,17 +66,45 @@ class API {
     });
   }
 
-  async updateOffer(offerId, data) {
+  async deleteComment(offerId, commentId, userEmail) {
+    return this._load(`/offers/${offerId}/comments/${commentId}`, {
+      method: `DELETE`,
+      params: {
+        userEmail
+      },
+    });
+  }
+
+  async updateOffer(offerId, data, userEmail) {
     return this._load(`/offers/${offerId}`, {
       method: `PUT`,
+      params: {
+        userEmail
+      },
       data
     });
   }
 
+  async deleteOffer(offerId, userEmail) {
+    return this._load(`/offers/${offerId}`, {
+      method: `DELETE`,
+      params: {
+        userEmail
+      },
+    });
+  }
+
   async createUser(data) {
-    return await this._load(`/user`, {
+    return await this._load(`/user/signup`, {
       method: `POST`,
-      data
+      data,
+    });
+  }
+
+  async loginUser(data) {
+    return await this._load(`/user/login`, {
+      method: `POST`,
+      data,
     });
   }
 }

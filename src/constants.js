@@ -20,9 +20,6 @@ exports.DataFileName = {
 
 exports.MAX_OFFERS_NUMBER = 1000;
 
-exports.NOT_FOUND_MESSAGE = `Not found.`;
-exports.SERVER_ERROR_MESSAGE = `Internal server error.`;
-
 exports.HttpCode = {
   OK: 200,
   CREATED: 201,
@@ -62,6 +59,19 @@ exports.ResponseMessage = {
   API_ROUTE_NOT_FOUND: `Route not found.`,
   PAGE_NOT_FOUND: `Page not found.`,
   BAD_REQUEST: `Invalid data.`,
+  FORBIDDEN: `This action is forbidden for you.`,
+  SERVER_ERROR_MESSAGE: `Internal server error.`
+};
+
+exports.UserErrorMessage = {
+  USER_NOT_EXISTS: `Пользователя не существует`,
+  WRONG_DATA: `Неверный email или пароль`,
+  FORBIDDEN: `У пользователя нет прав на данное действие`
+};
+
+exports.ServerMessage = {
+  START_ERROR: `Failed to start server:`,
+  START_SUCCESSFUL: `Server is running on port:`
 };
 
 exports.API_PREFIX = `/api`;
@@ -114,7 +124,8 @@ exports.NewOfferMessage = {
   MIN_COST_NUMBER: `Стоимость должна быть не меньше 100`,
   REQUIRED_FIELD: `Поле {#label} обязательно для заполнения`,
   WRONG_TYPE_ID: `Неверный id типа объявления`,
-  WRONG_CATEGORY: `Категория должна быть типа число`
+  WRONG_CATEGORY: `Категория должна быть типа число`,
+  MIN_CATEGORY_ARRAY_LENGTH: `Необходимо указать хотя бы одну категорию`
 };
 
 exports.NewCommentMessage = {
@@ -136,3 +147,5 @@ exports.NewUserMessage = {
 exports.SALT_ROUNDS = 10;
 
 exports.UPLOAD_DIR = `../upload/img/`;
+
+

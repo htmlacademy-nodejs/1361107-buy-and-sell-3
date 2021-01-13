@@ -6,7 +6,7 @@ block content
       h2.visually-hidden Самые новые предложения
       .tickets-list__wrapper
         .tickets-list__header
-          a.tickets-list__btn.btn.btn--big(href='#')
+          a.tickets-list__btn.btn.btn--big(href='/offers/add')
             span Новая публикация
         if maxPage !== 0
           if listOffers.length === 0
@@ -16,7 +16,7 @@ block content
           else
             ul
               each itemOffer in listOffers
-                li.tickets-list__item
+                li.tickets-list__item.js-card
                   div(class=`ticket-card ticket-card--color${itemOffer.cardColor}`)
                     .ticket-card__img
                       img(src=`/img/${itemOffer.picture}`, alt='Изображение товара')
@@ -27,12 +27,11 @@ block content
                           a(href=`/offers/category/${category.id}`) #{category.name}
                       .ticket-card__header
                         h3.ticket-card__title
-                          a(href=`/offers/${itemOffer.id}`) #{itemOffer.title}
+                          a(href=`/offers/edit/${itemOffer.id}`) #{itemOffer.title}
                         p.ticket-card__price
                           span.js-sum #{itemOffer.cost}
                           |  ₽
-                      .ticket-card__desc
-                        p #{itemOffer.description}
+                    a.ticket-card__del.js-delete(href=`/offers/delete/${itemOffer.id}`) Удалить
             if pageList.length > 1 && listOffers.length !== 0
               .tickets-list__pagination
                 ul.pagination

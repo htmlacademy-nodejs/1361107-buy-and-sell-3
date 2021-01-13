@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
     },
   }, {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     paranoid: false,
   });
 

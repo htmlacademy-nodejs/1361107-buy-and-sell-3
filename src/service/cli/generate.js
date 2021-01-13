@@ -1,7 +1,6 @@
 "use strict";
 
 const fs = require(`fs`).promises;
-const chalk = require(`chalk`);
 const {nanoid} = require(`nanoid`);
 const {
   MAX_OFFERS_NUMBER,
@@ -16,6 +15,9 @@ const {
   CommentRestrict,
 } = require(`../../constants`);
 const {getRandomInt, shuffle, readContent, getPictureFileName} = require(`../../utils`);
+const {getLogger} = require(`../lib/logger`);
+
+const logger = getLogger({name: `api`});
 
 const generateCommentList = (commentsAmount, comments) => {
   return Array(commentsAmount)
@@ -68,7 +70,7 @@ module.exports = {
     );
 
     if (count > MAX_OFFERS_NUMBER) {
-      console.log(chalk.red(`Не больше 1000 объявлений`));
+      logger.error(`Не больше 1000 объявлений`);
       process.exit(ExitCode.SUCCESS);
     }
 
@@ -80,10 +82,10 @@ module.exports = {
 
     try {
       await fs.writeFile(MOCKS_FILE_NAME, data);
-      console.log(chalk.green(`Файл успешно создан`));
+      logger.info(`Файл успешно создан`);
       process.exit(ExitCode.SUCCESS);
     } catch (error) {
-      console.log(chalk.red(`Неудалось записать файл`));
+      logger.error(`Неудалось записать файл`);
       process.exit(ExitCode.ERROR);
     }
   },
